@@ -1,2 +1,5 @@
 rootProject.name = 'admin-api'
+include 'domain'
+include 'application'
+include 'infrastructure'
 
