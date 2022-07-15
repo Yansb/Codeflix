@@ -1,17 +1,18 @@
 package com.yansb.admin.api.domain.category;
 
 import com.yansb.admin.api.domain.AggregateRoot;
+import com.yansb.admin.api.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 import java.util.UUID;
 
 public class Category extends AggregateRoot<CategoryID> {
-  final private String name;
-  final private String description;
-  final private boolean active;
+  private String name;
+  private String description;
+  private boolean active;
   final private Instant createdAt;
-  final private Instant updatedAt;
-  final private Instant deletedAt;
+  private Instant updatedAt;
+  private Instant deletedAt;
 
   private Category(
       final CategoryID anId,
@@ -31,10 +32,45 @@ public class Category extends AggregateRoot<CategoryID> {
     this.deletedAt = aDeleteDate;
   }
 
-  public static Category newCategory(final String aName, final String aDescription, final Boolean aIsActive){
+  public static Category newCategory(final String aName, final String aDescription, final Boolean IsActive){
     final var id = CategoryID.unique();
     final var now = Instant.now();
-    return new Category(id, aName, aDescription, aIsActive, now, now, null);
+    final var deletedAt = IsActive ? null : Instant.now();
+    return new Category(id, aName, aDescription, IsActive, now, now, deletedAt);
+  }
+
+  @Override
+  public void validate(ValidationHandler handler) {
+    new CategoryValidator(this, handler).validate();
+  }
+
+  public Category activate(){
+    this.deletedAt = null;
+    this.active = true;
+    this.updatedAt = Instant.now();
+    return this;
+  }
+
+  public Category deactivate(){
+    if(getDeletedAt() == null){
+      this.deletedAt = Instant.now();
+    }
+
+    this.active = false;
+    this.updatedAt = Instant.now();
+    return this;
+  }
+
+  public Category update(final String aName, final String aDescription, final boolean isActive){
+    if(isActive){
+      activate();
+    }else {
+      deactivate();
+    }
+    this.name = aName;
+    this.description = aDescription;
+    this.updatedAt = Instant.now();
+    return this;
   }
 
   public CategoryID getId() {

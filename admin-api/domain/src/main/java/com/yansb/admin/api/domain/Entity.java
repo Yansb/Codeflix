@@ -1,5 +1,7 @@
 package com.yansb.admin.api.domain;
 
+import com.yansb.admin.api.domain.validation.ValidationHandler;
+
 import java.util.Objects;
 
 public abstract class Entity<ID extends Identifier> {
@@ -10,9 +12,12 @@ public abstract class Entity<ID extends Identifier> {
     this.id = id;
   }
 
+  public abstract void validate(ValidationHandler handler);
+
   public ID getId() {
     return id;
   }
+
 
   @Override
   public boolean equals(Object o) {
