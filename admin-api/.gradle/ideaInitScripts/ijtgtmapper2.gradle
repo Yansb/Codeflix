@@ -1,0 +1,5 @@
+ext.pathMapper = [:]
+ext.pathMapper.put('//wsl\$/Ubuntu/home/yansb/.sdkman/candidates/java/17.0.2-open/bin/java', '/home/yansb/.sdkman/candidates/java/17.0.2-open/bin/java')
+ext.pathMapper.put('//wsl\$/Ubuntu/home/yansb/www/Codeflix/admin-api', '/home/yansb/www/Codeflix/admin-api')
+ext.pathMapper.put("<<target java executable path>>", '/home/yansb/.sdkman/candidates/java/17.0.2-open/bin/java')
+ext.mapPath = { path -> pathMapper.get(path) ?: path }
