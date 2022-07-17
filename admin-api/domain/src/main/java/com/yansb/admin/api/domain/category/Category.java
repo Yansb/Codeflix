@@ -6,7 +6,7 @@ import com.yansb.admin.api.domain.validation.ValidationHandler;
 import java.time.Instant;
 import java.util.UUID;
 
-public class Category extends AggregateRoot<CategoryID> {
+public class Category extends AggregateRoot<CategoryID> implements Cloneable {
   private String name;
   private String description;
   private boolean active;
@@ -37,6 +37,10 @@ public class Category extends AggregateRoot<CategoryID> {
     final var now = Instant.now();
     final var deletedAt = IsActive ? null : Instant.now();
     return new Category(id, aName, aDescription, IsActive, now, now, deletedAt);
+  }
+
+  public static Category clone(final Category aCategory){
+    return aCategory.clone();
   }
 
   @Override
@@ -99,5 +103,14 @@ public class Category extends AggregateRoot<CategoryID> {
 
   public Instant getDeletedAt() {
     return deletedAt;
+  }
+
+  @Override
+  public Category clone() {
+    try {
+      return (Category) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new AssertionError();
+    }
   }
 }

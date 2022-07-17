@@ -1,12 +1,13 @@
 package com.yansb.admin.api.application.category.create;
 
 import com.yansb.admin.api.domain.category.CategoryGateway;
-import com.yansb.admin.api.domain.exceptions.DomainException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Objects;
@@ -23,6 +24,10 @@ public class CreateCategoryUseCaseTest {
   @Mock
   private CategoryGateway gateway;
 
+  @BeforeEach
+  void cleanUp(){
+    Mockito.reset(gateway);
+  }
   @Test
   public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId(){
     final var expectedName = "Movies";
