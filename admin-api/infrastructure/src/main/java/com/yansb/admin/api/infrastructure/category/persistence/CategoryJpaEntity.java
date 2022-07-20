@@ -9,14 +9,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 
-@Entity
+@Entity(name = "Category")
 @Table(name = "category")
 public class CategoryJpaEntity {
 
   @Id
   private String id;
 
-  @Column(name = "name")
+  @Column(name = "name", nullable = false)
   private String name;
 
   @Column(name = "description", length = 4000, nullable = true)

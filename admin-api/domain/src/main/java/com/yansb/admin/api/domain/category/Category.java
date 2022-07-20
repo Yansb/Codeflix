@@ -4,7 +4,7 @@ import com.yansb.admin.api.domain.AggregateRoot;
 import com.yansb.admin.api.domain.validation.ValidationHandler;
 
 import java.time.Instant;
-import java.util.UUID;
+import java.util.Objects;
 
 public class Category extends AggregateRoot<CategoryID> implements Cloneable {
   private String name;
@@ -27,8 +27,8 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     this.name = aName;
     this.description = aDescription;
     this.active = isActive;
-    this.createdAt = aCreationDate;
-    this.updatedAt = aUpdateDate;
+    this.createdAt = Objects.requireNonNull(aCreationDate, "'created_at' should not be null");
+    this.updatedAt = Objects.requireNonNull(aUpdateDate, "'updated_at' should not be null");
     this.deletedAt = aDeleteDate;
   }
 
