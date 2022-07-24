@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.criteria.*;
 import java.util.Optional;
 
 import static com.yansb.admin.api.infrastructure.utils.SpecificationUtils.like;

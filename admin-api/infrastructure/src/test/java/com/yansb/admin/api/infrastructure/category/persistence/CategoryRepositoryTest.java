@@ -1,7 +1,7 @@
 package com.yansb.admin.api.infrastructure.category.persistence;
 
 import com.yansb.admin.api.domain.category.Category;
-import com.yansb.admin.api.infrastructure.MySQLGatewayTest;
+import com.yansb.admin.api.MySQLGatewayTest;
 import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
