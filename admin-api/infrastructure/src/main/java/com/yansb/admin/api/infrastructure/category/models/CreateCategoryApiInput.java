@@ -7,5 +7,4 @@ public record CreateCategoryApiInput(
     @JsonProperty("description") String description,
     @JsonProperty("is_active")    Boolean active
 ) {
-
 }

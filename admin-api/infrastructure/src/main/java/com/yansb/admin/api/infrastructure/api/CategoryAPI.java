@@ -1,6 +1,7 @@
 package com.yansb.admin.api.infrastructure.api;
 
 import com.yansb.admin.api.domain.pagination.Pagination;
+import com.yansb.admin.api.infrastructure.category.models.CategoryApiOutput;
 import com.yansb.admin.api.infrastructure.category.models.CreateCategoryApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,4 +44,17 @@ public interface CategoryAPI {
       @RequestParam(name = "dir", required = false, defaultValue = "asc") final int dir
 
   );
+
+  @GetMapping(
+      value = "{id}",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  @Operation(summary = "Get a category by id")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Category retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Category not found"),
+      @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred")
+  })
+  CategoryApiOutput getById(@PathVariable(name = "id") String id);
 }
