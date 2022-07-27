@@ -9,6 +9,7 @@ import com.yansb.admin.api.application.category.retrieve.get.GetCategoryByIdUseC
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.exceptions.DomainException;
+import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import com.yansb.admin.api.domain.validation.Error;
 import com.yansb.admin.api.domain.validation.handler.Notification;
 import com.yansb.admin.api.infrastructure.category.models.CreateCategoryApiInput;
@@ -195,4 +196,26 @@ public class CategoryAPITest {
     verify(getCategoryByIdUseCase, times(1)).execute(expectedId);
   }
 
+  @Test
+  public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound() throws Exception {
+    //given
+    final var expectedErrorMessage ="Category with ID 123 was not found";
+    final var expectedId = CategoryID.from("123");
+
+    when(getCategoryByIdUseCase.execute(any()))
+        .thenThrow(NotFoundException.with(Category.class, expectedId));
+
+    //when
+
+    final var request = get("/categories/{id}", expectedId.getValue())
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON);
+
+    final var response = this.mvc.perform(request)
+        .andDo(print());
+
+    // then
+    response.andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)));
+  }
 }

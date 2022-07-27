@@ -1,8 +1,10 @@
 package com.yansb.admin.api.application.category.retrieve.get;
 
+import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.exceptions.DomainException;
+import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import com.yansb.admin.api.domain.validation.Error;
 
 import java.util.Objects;
@@ -25,7 +27,8 @@ public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase {
         .orElseThrow(notFound(anCategoryId));
   }
 
-  public Supplier<DomainException> notFound(final CategoryID anId) {
-    return () -> DomainException.with(new Error("Category with ID %s was not found".formatted(anId.getValue())));
+
+  public Supplier<NotFoundException> notFound(final CategoryID anId) {
+    return () -> NotFoundException.with(Category.class, anId);
   }
 }

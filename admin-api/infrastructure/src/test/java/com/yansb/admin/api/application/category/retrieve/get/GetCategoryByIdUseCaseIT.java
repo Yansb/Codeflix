@@ -5,6 +5,7 @@ import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.exceptions.DomainException;
+import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryJpaEntity;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -68,7 +69,7 @@ public class GetCategoryByIdUseCaseIT {
     CategoryID expectedId = CategoryID.from("123");
 
     final var actualException = Assertions.assertThrows(
-        DomainException.class,
+        NotFoundException.class,
         () -> useCase.execute(expectedId.getValue())
     );
 

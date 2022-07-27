@@ -3,14 +3,13 @@ package com.yansb.admin.api.application.category.retrieve.get;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
-import com.yansb.admin.api.domain.exceptions.DomainException;
+import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -66,7 +65,7 @@ public class GetCategoryByIdUseCaseTest {
         .thenReturn(Optional.empty());
 
     final var actualException = Assertions.assertThrows(
-        DomainException.class,
+        NotFoundException.class,
         () -> useCase.execute(expectedId.getValue())
     );
 
