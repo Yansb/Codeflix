@@ -4,6 +4,7 @@ import com.yansb.admin.api.IntegrationTest;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.exceptions.DomainException;
+import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryJpaEntity;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -48,7 +49,7 @@ public class UpdateCategoryUseCaseIT {
     final var actualOutput = useCase.execute(aCommand).get();
 
     Assertions.assertNotNull(actualOutput);
-    Assertions.assertEquals(expectedId, actualOutput.id());
+    Assertions.assertEquals(expectedId.getValue(), actualOutput.id());
 
     final var actualCategory =
         categoryRepository.findById(expectedId.getValue()).get();
@@ -111,7 +112,7 @@ public class UpdateCategoryUseCaseIT {
     final var actualOutput = useCase.execute(aCommand).get();
 
     Assertions.assertNotNull(actualOutput);
-    Assertions.assertEquals(expectedId, actualOutput.id());
+    Assertions.assertEquals(expectedId.getValue(), actualOutput.id());
 
     final var actualCategory =
         categoryRepository.findById(expectedId.getValue()).get();
@@ -179,10 +180,9 @@ public class UpdateCategoryUseCaseIT {
     );
 
     final var actualException =
-        Assertions.assertThrows(DomainException.class, () -> useCase.execute(aCommand));
+        Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
-    Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-    Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+    Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
   }
 
   private void save(final Category... aCategory) {

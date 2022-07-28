@@ -4,7 +4,7 @@ import com.yansb.admin.api.application.category.create.CreateCategoryCommand;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
-import com.yansb.admin.api.domain.exceptions.DomainException;
+import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ public class UpdateCategoryUseCaseTest {
     final var actualOutput = useCase.execute(aCommand).get();
 
     Assertions.assertNotNull(actualOutput);
-    Assertions.assertEquals(expectedId, actualOutput.id());
+    Assertions.assertEquals(expectedId.getValue(), actualOutput.id());
 
     Mockito.verify(categoryGateway, times(1)).findById(eq(expectedId));
     Mockito.verify(categoryGateway, times(1)).update(argThat(
@@ -78,7 +78,7 @@ public class UpdateCategoryUseCaseTest {
   }
 
   @Test
-  public void givenAInvalidName_whenCallsUpdateCategory_thenReturnDomainException(){
+  public void givenAInvalidName_whenCallsUpdateCategory_thenReturnNotFoundException(){
     final var aCategory = Category.newCategory("Movi", "Most wa", true);
 
     final String expectedName = null;
@@ -132,7 +132,7 @@ public class UpdateCategoryUseCaseTest {
     final var actualOutput = useCase.execute(aCommand).get();
 
     Assertions.assertNotNull(actualOutput);
-    Assertions.assertEquals(expectedId, actualOutput.id());
+    Assertions.assertEquals(expectedId.getValue(), actualOutput.id());
 
     Mockito.verify(categoryGateway, times(1)).findById(eq(expectedId));
     Mockito.verify(categoryGateway, times(1)).update(argThat(
@@ -186,7 +186,6 @@ public class UpdateCategoryUseCaseTest {
     final var expectedDescription = "Most watched category";
     final var expectedIsActive = true;
     final var expectedErrorMessage = "Category with ID 123 was not found";
-    final var expectedErrorCount = 1;
 
 
     final var aCommand = UpdateCategoryCommand.with(
@@ -200,10 +199,9 @@ public class UpdateCategoryUseCaseTest {
         .thenReturn(Optional.empty());
 
     final var actualException =
-        Assertions.assertThrows(DomainException.class, () -> useCase.execute(aCommand));
+        Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
-    Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-    Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+    Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
 
     Mockito.verify(categoryGateway, times(1)).findById(eq(CategoryID.from(expectedId)));
     Mockito.verify(categoryGateway, times(0)).update(any());

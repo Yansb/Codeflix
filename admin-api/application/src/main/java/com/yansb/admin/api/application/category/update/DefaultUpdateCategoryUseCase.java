@@ -3,8 +3,7 @@ package com.yansb.admin.api.application.category.update;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
-import com.yansb.admin.api.domain.exceptions.DomainException;
-import com.yansb.admin.api.domain.validation.Error;
+import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import com.yansb.admin.api.domain.validation.handler.Notification;
 import io.vavr.API;
 import io.vavr.control.Either;
@@ -46,7 +45,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
             .bimap(Notification::create, UpdateCategoryOutput::from);
   }
 
-  public Supplier<DomainException> notFound(final CategoryID anId) {
-    return () -> DomainException.with(new Error("Category with ID %s was not found".formatted(anId.getValue())));
+  public Supplier<NotFoundException> notFound(final CategoryID anId) {
+    return () -> NotFoundException.with(Category.class, anId);
   }
 }
