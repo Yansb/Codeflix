@@ -3,7 +3,7 @@ package com.yansb.admin.api.infrastructure.category;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
-import com.yansb.admin.api.domain.category.CategorySearchQuery;
+import com.yansb.admin.api.domain.pagination.SearchQuery;
 import com.yansb.admin.api.domain.pagination.Pagination;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryJpaEntity;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryRepository;
@@ -50,7 +50,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
   }
 
   @Override
-  public Pagination<Category> findAll(final CategorySearchQuery aQuery) {
+  public Pagination<Category> findAll(final SearchQuery aQuery) {
     final var page = PageRequest.of(
         aQuery.page(),
         aQuery.perPage(),

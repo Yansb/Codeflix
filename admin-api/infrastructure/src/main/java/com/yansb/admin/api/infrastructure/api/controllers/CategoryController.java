@@ -9,7 +9,7 @@ import com.yansb.admin.api.application.category.retrieve.list.ListCategoriesUseC
 import com.yansb.admin.api.application.category.update.UpdateCategoryCommand;
 import com.yansb.admin.api.application.category.update.UpdateCategoryOutput;
 import com.yansb.admin.api.application.category.update.UpdateCategoryUseCase;
-import com.yansb.admin.api.domain.category.CategorySearchQuery;
+import com.yansb.admin.api.domain.pagination.SearchQuery;
 import com.yansb.admin.api.domain.pagination.Pagination;
 import com.yansb.admin.api.domain.validation.handler.Notification;
 import com.yansb.admin.api.infrastructure.api.CategoryAPI;
@@ -69,7 +69,7 @@ public class CategoryController implements CategoryAPI {
           final String dir
   ) {
     return listCategoriesUseCase.execute(
-        new CategorySearchQuery(page, perPage, search, sort, dir)
+        new SearchQuery(page, perPage, search, sort, dir)
     )
         .map(CategoryApiPresenter::present);
   }

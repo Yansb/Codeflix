@@ -2,7 +2,7 @@ package com.yansb.admin.api.application.category.retrieve.list;
 
 import com.yansb.admin.api.IntegrationTest;
 import com.yansb.admin.api.domain.category.Category;
-import com.yansb.admin.api.domain.category.CategorySearchQuery;
+import com.yansb.admin.api.domain.pagination.SearchQuery;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryJpaEntity;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 @IntegrationTest
@@ -50,7 +49,7 @@ public class ListCategoriesUseCaseIT {
     final var expectedTotal = 0;
 
     final var aQuery =
-        new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerm, expectedSort, expectedDirection);
+        new SearchQuery(expectedPage, expectedPerPage, expectedTerm, expectedSort, expectedDirection);
 
     final var actualResult = useCase.execute(aQuery);
 
@@ -80,7 +79,7 @@ public class ListCategoriesUseCaseIT {
     final var expectedDirection = "asc";
 
     final var aQuery =
-        new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerm, expectedSort, expectedDirection);
+        new SearchQuery(expectedPage, expectedPerPage, expectedTerm, expectedSort, expectedDirection);
 
     final var actualResult = useCase.execute(aQuery);
 
@@ -110,7 +109,7 @@ public class ListCategoriesUseCaseIT {
     final var expectedTerm = "";
 
     final var aQuery =
-        new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerm, expectedSort, expectedDirection);
+        new SearchQuery(expectedPage, expectedPerPage, expectedTerm, expectedSort, expectedDirection);
 
     final var actualResult = useCase.execute(aQuery);
     System.out.println(actualResult.items());
@@ -141,7 +140,7 @@ public class ListCategoriesUseCaseIT {
     final var expectedTerm = "";
 
     final var aQuery =
-        new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerm, expectedSort, expectedDirection);
+        new SearchQuery(expectedPage, expectedPerPage, expectedTerm, expectedSort, expectedDirection);
 
     final var actualResult = useCase.execute(aQuery);
     System.out.println(actualResult.items());

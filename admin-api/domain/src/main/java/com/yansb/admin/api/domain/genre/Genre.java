@@ -17,7 +17,7 @@ public class Genre extends AggregateRoot<GenreID> {
   private String name;
   private boolean active;
   private List<CategoryID> categories;
-  private Instant createdAt;
+  private final Instant createdAt;
   private Instant updatedAt;
   private Instant deletedAt;
 
@@ -39,12 +39,7 @@ public class Genre extends AggregateRoot<GenreID> {
     this.updatedAt = aUpdatedAt;
     this.deletedAt = aDeletedAt;
 
-    final var notification = Notification.create();
-    validate(notification);
-
-    if(notification.hasError()){
-      throw new NotificationException("Failed to create a Aggregate Genre",notification);
-    }
+    selfValidate();
   }
 
   public static Genre newGenre(final String aName, final boolean isActive){
@@ -55,7 +50,7 @@ public class Genre extends AggregateRoot<GenreID> {
         anId,
         aName,
         isActive,
-        Collections.emptyList(),
+        new ArrayList<>(),
         now,
         now,
         deletedAt
@@ -117,6 +112,37 @@ public class Genre extends AggregateRoot<GenreID> {
     return this;
   }
 
+  public Genre update(final String aName, final boolean isActive, final List<CategoryID> categories) {
+    if(isActive){
+      activate();
+    }else{
+      deactivate();
+    }
+    this.name = aName;
+    this.categories = new ArrayList<>(categories != null ? categories : Collections.emptyList());
+    this.updatedAt = InstantUtils.now();
+    selfValidate();
+    return this;
+  }
+
+  public void addCategory(final CategoryID aCategoryId){
+    if(aCategoryId == null){
+      return;
+    }
+
+    this.categories.add(aCategoryId);
+    this.updatedAt = InstantUtils.now();
+  }
+
+  public void removeCategory(final CategoryID aCategoryId){
+    if(aCategoryId == null){
+      return;
+    }
+
+    this.categories.remove(aCategoryId);
+    this.updatedAt = InstantUtils.now();
+  }
+
   public String getName() {
     return name;
   }
@@ -140,4 +166,15 @@ public class Genre extends AggregateRoot<GenreID> {
   public boolean isActive() {
     return active;
   }
+
+  private void selfValidate() {
+    final var notification = Notification.create();
+    validate(notification);
+
+    if(notification.hasError()){
+      throw new NotificationException("Failed to create a Aggregate Genre",notification);
+    }
+  }
+
+
 }
