@@ -13,6 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.yansb.admin.api.infrastructure.utils.SpecificationUtils.like;
@@ -72,5 +75,11 @@ public class CategoryMySQLGateway implements CategoryGateway {
         pageResult.getTotalElements(),
         pageResult.map(CategoryJpaEntity::toAggregate).toList()
     );
+  }
+
+  @Override
+  public List<CategoryID> existsByIds(Iterable<CategoryID> ids) {
+    //TODO: Implementar quando chegar na parte de infraestrutura
+    return Collections.emptyList();
   }
 }

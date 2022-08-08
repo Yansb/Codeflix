@@ -96,6 +96,16 @@ public class Genre extends AggregateRoot<GenreID> {
     new GenreValidator(this, handler).validate();
   }
 
+  public Genre addCategories(final List<CategoryID> categories){
+    if(categories == null || categories.isEmpty()){
+      return this;
+    }
+
+    this.categories.addAll(categories);
+    this.updatedAt = InstantUtils.now();
+    return this;
+  }
+
   public Genre activate(){
     this.deletedAt = null;
     this.active = true;
