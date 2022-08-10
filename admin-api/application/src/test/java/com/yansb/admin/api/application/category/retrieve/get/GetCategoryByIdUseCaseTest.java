@@ -1,25 +1,22 @@
 package com.yansb.admin.api.application.category.retrieve.get;
 
+import com.yansb.admin.api.application.UseCaseTest;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class GetCategoryByIdUseCaseTest {
+public class GetCategoryByIdUseCaseTest extends UseCaseTest {
 
   @InjectMocks
   private DefaultGetCategoryByIdUseCase useCase;
@@ -27,13 +24,13 @@ public class GetCategoryByIdUseCaseTest {
   @Mock
   private CategoryGateway categoryGateway;
 
-  @BeforeEach
-  void cleanUp() {
-    reset(categoryGateway);
+  @Override
+  protected List<Object> getMocks() {
+    return List.of(categoryGateway);
   }
-  
+
   @Test
-  public void givenAValidId_whenCallsGetCategory_shouldReturnCategory(){
+  public void givenAValidId_whenCallsGetCategory_shouldReturnCategory() {
     final var expectedName = "Movies";
     final var expectedDescription = "Most watched category";
     final var expectedIsActive = true;
@@ -55,10 +52,10 @@ public class GetCategoryByIdUseCaseTest {
     Assertions.assertEquals(actualCategory.updatedAt(), aCategory.getUpdatedAt());
     Assertions.assertEquals(expectedName, actualCategory.name());
   }
-  
+
   @Test
-  public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound(){
-    final var expectedErrorMessage ="Category with ID 123 was not found";
+  public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound() {
+    final var expectedErrorMessage = "Category with ID 123 was not found";
     CategoryID expectedId = CategoryID.from("123");
 
     when(categoryGateway.findById(eq(expectedId)))
@@ -74,10 +71,10 @@ public class GetCategoryByIdUseCaseTest {
         actualException.getMessage()
     );
   }
-  
+
   @Test
-  public void givenAnId_whenGatewayThrowsError_shouldThrowException(){
-    final var expectedErrorMessage ="Gateway error";
+  public void givenAnId_whenGatewayThrowsError_shouldThrowException() {
+    final var expectedErrorMessage = "Gateway error";
     final var expectedId = CategoryID.from("123");
 
     when(categoryGateway.findById(eq(expectedId)))

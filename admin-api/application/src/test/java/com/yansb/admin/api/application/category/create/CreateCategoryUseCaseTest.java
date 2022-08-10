@@ -1,22 +1,19 @@
 package com.yansb.admin.api.application.category.create;
 
+import com.yansb.admin.api.application.UseCaseTest;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class CreateCategoryUseCaseTest {
+public class CreateCategoryUseCaseTest extends UseCaseTest {
 
   @InjectMocks
   private DefaultCreateCategoryUseCase useCase;
@@ -24,12 +21,13 @@ public class CreateCategoryUseCaseTest {
   @Mock
   private CategoryGateway gateway;
 
-  @BeforeEach
-  void cleanUp(){
-    Mockito.reset(gateway);
+  @Override
+  protected List<Object> getMocks() {
+    return List.of(gateway);
   }
+
   @Test
-  public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId(){
+  public void givenAValidCommand_whenCallsCreateCategory_shouldReturnCategoryId() {
     final var expectedName = "Movies";
     final var expectedDescription = "Most watched categories";
     final var expectedIsActive = true;
@@ -47,18 +45,18 @@ public class CreateCategoryUseCaseTest {
     Assertions.assertNotNull(actualOutput.id());
 
     verify(gateway, times(1))
-        .create(argThat(aCategory-> Objects.equals(expectedName, aCategory.getName())
-                  && Objects.equals(expectedDescription, aCategory.getDescription())
-                  && Objects.equals(expectedIsActive, aCategory.getIsActive())
-                  && Objects.nonNull(aCategory.getId())
-                  && Objects.nonNull(aCategory.getCreatedAt())
-                  && Objects.nonNull(aCategory.getUpdatedAt())
-                  && Objects.isNull(aCategory.getDeletedAt())
-            ));
+        .create(argThat(aCategory -> Objects.equals(expectedName, aCategory.getName())
+            && Objects.equals(expectedDescription, aCategory.getDescription())
+            && Objects.equals(expectedIsActive, aCategory.getIsActive())
+            && Objects.nonNull(aCategory.getId())
+            && Objects.nonNull(aCategory.getCreatedAt())
+            && Objects.nonNull(aCategory.getUpdatedAt())
+            && Objects.isNull(aCategory.getDeletedAt())
+        ));
   }
 
   @Test
-  public void givenAInvalidName_whenCallsCreateCategory_thenReturnDomainException(){
+  public void givenAInvalidName_whenCallsCreateCategory_thenReturnDomainException() {
     final String expectedName = null;
     final var expectedDescription = "Most watched categories";
     final var expectedIsActive = true;
@@ -76,7 +74,7 @@ public class CreateCategoryUseCaseTest {
   }
 
   @Test
-  public void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_thenReturnInactiveCategoryId(){
+  public void givenAValidCommandWithInactiveCategory_whenCallsCreateCategory_thenReturnInactiveCategoryId() {
     final String expectedName = "Movies";
     final var expectedDescription = "Most watched categories";
     final var expectedIsActive = false;
@@ -93,7 +91,7 @@ public class CreateCategoryUseCaseTest {
     Assertions.assertNotNull(actualOutput.id());
 
     verify(gateway, times(1))
-        .create(argThat(aCategory-> Objects.equals(expectedName, aCategory.getName())
+        .create(argThat(aCategory -> Objects.equals(expectedName, aCategory.getName())
             && Objects.equals(expectedDescription, aCategory.getDescription())
             && Objects.equals(expectedIsActive, aCategory.getIsActive())
             && Objects.nonNull(aCategory.getId())
@@ -104,7 +102,7 @@ public class CreateCategoryUseCaseTest {
   }
 
   @Test
-  public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAException(){
+  public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAException() {
     final var expectedName = "Movies";
     final var expectedDescription = "Most watched categories";
     final var expectedIsActive = true;

@@ -1,16 +1,15 @@
 package com.yansb.admin.api.application.genre.create;
 
+import com.yansb.admin.api.application.UseCaseTest;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.exceptions.NotificationException;
 import com.yansb.admin.api.domain.genre.GenreGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,8 +17,7 @@ import java.util.Objects;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class CreateGenreUseCaseTest {
+public class CreateGenreUseCaseTest extends UseCaseTest {
 
   @InjectMocks
   private DefaultCreateGenreUseCase useCase;
@@ -30,8 +28,13 @@ public class CreateGenreUseCaseTest {
   @Mock
   private GenreGateway genreGateway;
 
+  @Override
+  protected List<Object> getMocks() {
+    return List.of(categoryGateway, genreGateway);
+  }
+
   @Test
-  public void givenAValidCommand_whenCallsCreateGenre_shouldReturnGenreId(){
+  public void givenAValidCommand_whenCallsCreateGenre_shouldReturnGenreId() {
     // given
     final var expectName = "Action";
     final var expectedIsActive = true;
@@ -51,17 +54,17 @@ public class CreateGenreUseCaseTest {
 
     Mockito.verify(genreGateway, times(1)).create(argThat(aGenre ->
         Objects.equals(expectName, aGenre.getName()) &&
-        Objects.equals(expectedIsActive, aGenre.isActive()) &&
-        Objects.equals(expectedCategories, aGenre.getCategories()) &&
-        Objects.nonNull(aGenre.getId()) &&
-        Objects.nonNull(aGenre.getCreatedAt()) &&
-        Objects.nonNull(aGenre.getUpdatedAt()) &&
-        Objects.isNull(aGenre.getDeletedAt())
+            Objects.equals(expectedIsActive, aGenre.isActive()) &&
+            Objects.equals(expectedCategories, aGenre.getCategories()) &&
+            Objects.nonNull(aGenre.getId()) &&
+            Objects.nonNull(aGenre.getCreatedAt()) &&
+            Objects.nonNull(aGenre.getUpdatedAt()) &&
+            Objects.isNull(aGenre.getDeletedAt())
     ));
   }
 
   @Test
-  public void givenAValidCommandWithInactiveGenre_whenCallsCreateGenre_shouldReturnGenreId(){
+  public void givenAValidCommandWithInactiveGenre_whenCallsCreateGenre_shouldReturnGenreId() {
     // given
     final var expectName = "Action";
     final var expectedIsActive = false;
@@ -81,17 +84,17 @@ public class CreateGenreUseCaseTest {
 
     Mockito.verify(genreGateway, times(1)).create(argThat(aGenre ->
         Objects.equals(expectName, aGenre.getName()) &&
-        Objects.equals(expectedIsActive, aGenre.isActive()) &&
-        Objects.equals(expectedCategories, aGenre.getCategories()) &&
-        Objects.nonNull(aGenre.getId()) &&
-        Objects.nonNull(aGenre.getCreatedAt()) &&
-        Objects.nonNull(aGenre.getUpdatedAt()) &&
-        Objects.nonNull(aGenre.getDeletedAt())
+            Objects.equals(expectedIsActive, aGenre.isActive()) &&
+            Objects.equals(expectedCategories, aGenre.getCategories()) &&
+            Objects.nonNull(aGenre.getId()) &&
+            Objects.nonNull(aGenre.getCreatedAt()) &&
+            Objects.nonNull(aGenre.getUpdatedAt()) &&
+            Objects.nonNull(aGenre.getDeletedAt())
     ));
   }
 
   @Test
-  public void givenAValidCommandWithCategories_whenCallsCreateGenre_shouldReturnGenreID(){
+  public void givenAValidCommandWithCategories_whenCallsCreateGenre_shouldReturnGenreID() {
     // given
     final var expectName = "Action";
     final var expectedIsActive = true;
@@ -130,7 +133,7 @@ public class CreateGenreUseCaseTest {
   }
 
   @Test
-  public void givenAInvalidEmptyName_whenCallsCreateGenre_shouldReturnDomainException(){
+  public void givenAInvalidEmptyName_whenCallsCreateGenre_shouldReturnDomainException() {
     // given
     final var expectName = "";
     final var expectedIsActive = true;
@@ -158,7 +161,7 @@ public class CreateGenreUseCaseTest {
   }
 
   @Test
-  public void givenAInvalidNullName_whenCallsCreateGenre_shouldReturnDomainException(){
+  public void givenAInvalidNullName_whenCallsCreateGenre_shouldReturnDomainException() {
     // given
     final String expectName = null;
     final var expectedIsActive = true;
@@ -184,7 +187,7 @@ public class CreateGenreUseCaseTest {
   }
 
   @Test
-  public void givenAValidCommand_whenCallsCreateGenreAndSomeCategoriesDoesNotExists_shouldReturnDomainException(){
+  public void givenAValidCommand_whenCallsCreateGenreAndSomeCategoriesDoesNotExists_shouldReturnDomainException() {
     // given
     final var movies = CategoryID.from("1");
     final var shows = CategoryID.from("2");

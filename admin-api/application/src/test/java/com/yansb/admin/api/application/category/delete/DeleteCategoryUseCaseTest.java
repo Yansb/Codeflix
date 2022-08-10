@@ -1,35 +1,34 @@
 package com.yansb.admin.api.application.category.delete;
 
+import com.yansb.admin.api.application.UseCaseTest;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.category.CategoryID;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class DeleteCategoryUseCaseTest {
+public class DeleteCategoryUseCaseTest extends UseCaseTest {
   @InjectMocks
   private DefaultDeleteCategoryUseCase useCase;
 
   @Mock
   private CategoryGateway categoryGateway;
 
-  @BeforeEach
-  void cleanUp(){
-    reset(categoryGateway);
+  @Override
+  protected List<Object> getMocks() {
+    return List.of(categoryGateway);
   }
 
   @Test
-  public void givenAValidID_whenCallsDeleteCategory_shouldBeOk(){
+  public void givenAValidID_whenCallsDeleteCategory_shouldBeOk() {
     final var aCategory = Category.newCategory("Movies", "Most watched category", true);
 
     final var expectedId = aCategory.getId();
@@ -42,7 +41,7 @@ public class DeleteCategoryUseCaseTest {
   }
 
   @Test
-  public void givenAInvalidId_whenCallsDeleteCategory_shouldBeOk(){
+  public void givenAInvalidId_whenCallsDeleteCategory_shouldBeOk() {
     final var expectedId = CategoryID.from("invalidId");
 
     doNothing().when(categoryGateway).deleteById(eq(expectedId));
@@ -53,7 +52,7 @@ public class DeleteCategoryUseCaseTest {
   }
 
   @Test
-  public void givenAnId_whenGatewayThrowsError_shouldThrowException(){
+  public void givenAnId_whenGatewayThrowsError_shouldThrowException() {
     final var expectedId = CategoryID.from("invalidId");
 
     doThrow(new IllegalStateException(("Gateway error;"))).when(categoryGateway).deleteById(eq(expectedId));

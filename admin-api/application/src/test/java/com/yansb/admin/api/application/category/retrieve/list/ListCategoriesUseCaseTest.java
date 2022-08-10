@@ -1,25 +1,21 @@
 package com.yansb.admin.api.application.category.retrieve.list;
 
+import com.yansb.admin.api.application.UseCaseTest;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryGateway;
-import com.yansb.admin.api.domain.pagination.SearchQuery;
 import com.yansb.admin.api.domain.pagination.Pagination;
+import com.yansb.admin.api.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class ListCategoriesUseCaseTest {
+public class ListCategoriesUseCaseTest extends UseCaseTest {
 
   @InjectMocks
   private DefaultListCategoriesUseCase useCase;
@@ -27,17 +23,17 @@ public class ListCategoriesUseCaseTest {
   @Mock
   private CategoryGateway categoryGateway;
 
-  @BeforeEach
-  void cleanUp() {
-    reset(categoryGateway);
+  @Override
+  protected List<Object> getMocks() {
+    return List.of(categoryGateway);
   }
 
   @Test
-  public void givenAValidQuery_whenCallsListCategories_thenShouldReturnCategories(){
+  public void givenAValidQuery_whenCallsListCategories_thenShouldReturnCategories() {
     final var categories = List.of(
         Category.newCategory("Movies", "Most watched category", true),
         Category.newCategory("Books", "Most read category", true)
-        );
+    );
 
     final var expectedPage = 0;
     final var expectedPerPage = 10;
@@ -46,7 +42,7 @@ public class ListCategoriesUseCaseTest {
     final var expectedDirection = "asc";
 
 
-    final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms,expectedSort,expectedDirection);
+    final var aQuery = new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
     final var expectedPagination = new Pagination<>(
         expectedPage,
@@ -71,7 +67,7 @@ public class ListCategoriesUseCaseTest {
   }
 
   @Test
-  public void givenAValidQuery_whenHasNoResults_thenShouldReturnEmptyList(){
+  public void givenAValidQuery_whenHasNoResults_thenShouldReturnEmptyList() {
     final var categories = List.<Category>of();
 
     final var expectedPage = 0;
@@ -80,7 +76,7 @@ public class ListCategoriesUseCaseTest {
     final var expectedSort = "createdAt";
     final var expectedDirection = "asc";
 
-    final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms,expectedSort,expectedDirection);
+    final var aQuery = new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
     final var expectedPagination = new Pagination<>(
         expectedPage,
@@ -106,15 +102,15 @@ public class ListCategoriesUseCaseTest {
   }
 
   @Test
-  public void givenAValidQuery_whenGatewayThrowsException_thenShouldThrowException(){
+  public void givenAValidQuery_whenGatewayThrowsException_thenShouldThrowException() {
     final var expectedPage = 0;
     final var expectedPerPage = 10;
     final var expectedTerms = "";
     final var expectedSort = "createdAt";
     final var expectedDirection = "asc";
-    final var expectedErrorMessage= "Error";
+    final var expectedErrorMessage = "Error";
 
-    final var aQuery = new SearchQuery(expectedPage, expectedPerPage,expectedTerms,expectedSort,expectedDirection);
+    final var aQuery = new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
     when(categoryGateway.findAll(Mockito.eq(aQuery)))
         .thenThrow(new IllegalStateException(expectedErrorMessage));
