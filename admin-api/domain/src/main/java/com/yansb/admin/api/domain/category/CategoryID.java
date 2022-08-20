@@ -13,20 +13,20 @@ public class CategoryID extends Identifier {
     this.value = value;
   }
 
-  public static CategoryID unique(){
+  public static CategoryID unique() {
     return CategoryID.from(UUID.randomUUID());
   }
 
-  public static CategoryID from(final String anID){
+  public static CategoryID from(final String anID) {
     return new CategoryID(anID);
   }
 
-  public static CategoryID from(final UUID anId){
+  public static CategoryID from(final UUID anId) {
     return new CategoryID(anId.toString().toLowerCase());
   }
 
   @Override
-  public String getValue(){
+  public String getValue() {
     return value;
   }
 

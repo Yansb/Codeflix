@@ -6,6 +6,8 @@ import com.yansb.admin.api.domain.genre.GenreID;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,6 +43,7 @@ public class GenreJpaEntity {
     this.id = aId;
     this.name = aName;
     this.active = aActive;
+    this.categories = new HashSet<>();
     this.createdAt = aCreatedAt;
     this.updatedAt = aUpdatedAt;
     this.deletedAt = aDeletedAt;
@@ -71,9 +74,7 @@ public class GenreJpaEntity {
         GenreID.from(getId()),
         getName(),
         isActive(),
-        getCategories()
-            .stream().map(it -> CategoryID.from(it.getId().getCategoryId()))
-            .toList(),
+        getCategoryIDs(),
         getCreatedAt(),
         getUpdatedAt(),
         getDeletedAt()
@@ -111,6 +112,13 @@ public class GenreJpaEntity {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+
+  public List<CategoryID> getCategoryIDs() {
+    return getCategories()
+        .stream().map(it -> CategoryID.from(it.getId().getCategoryId()))
+        .toList();
   }
 
   public Set<GenreCategoryJpaEntity> getCategories() {
