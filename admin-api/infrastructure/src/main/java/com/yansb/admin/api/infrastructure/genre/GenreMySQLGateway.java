@@ -7,6 +7,10 @@ import com.yansb.admin.api.domain.pagination.Pagination;
 import com.yansb.admin.api.domain.pagination.SearchQuery;
 import com.yansb.admin.api.infrastructure.genre.persistence.GenreJpaEntity;
 import com.yansb.admin.api.infrastructure.genre.persistence.GenreRepository;
+import com.yansb.admin.api.infrastructure.utils.SpecificationUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -33,12 +37,18 @@ public class GenreMySQLGateway implements GenreGateway {
 
   @Override
   public void deleteByID(GenreID anID) {
+    final var aGenreId = anID.getValue();
+    if(this.genreRepository.existsById(aGenreId)){
+      this.genreRepository.deleteById(aGenreId);
+    }
 
   }
 
   @Override
   public Optional<Genre> findByID(GenreID anID) {
-    return Optional.empty();
+    final var aGenreId = anID.getValue();
+    return this.genreRepository.findById(aGenreId)
+        .map(GenreJpaEntity::toAggregate);
   }
 
   @Override
@@ -48,6 +58,29 @@ public class GenreMySQLGateway implements GenreGateway {
 
   @Override
   public Pagination<Genre> findAll(SearchQuery aQuery) {
-    return null;
+    final var page =PageRequest.of(
+        aQuery.page(),
+        aQuery.perPage(),
+        Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
+    );
+
+    final var where = Optional.ofNullable(aQuery.terms())
+        .filter(str -> !str.isBlank())
+        .map(this::assembleSpecification)
+        .orElse(null);
+
+    final var pageResult =
+      this.genreRepository.findAll(Specification.where(where),page);
+
+    return new Pagination<>(
+        pageResult.getNumber(),
+        pageResult.getSize(),
+        pageResult.getTotalElements(),
+        pageResult.map(GenreJpaEntity::toAggregate).stream().toList()
+    );
+  }
+
+  private Specification<GenreJpaEntity> assembleSpecification(final String terms){
+    return SpecificationUtils.like("name", terms);
   }
 }

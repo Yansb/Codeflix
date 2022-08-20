@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static com.yansb.admin.api.infrastructure.utils.SpecificationUtils.like;
 
@@ -62,10 +63,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     final var specifications = Optional.ofNullable(aQuery.terms())
         .filter(str -> !str.isBlank())
-        .map(str -> SpecificationUtils
-              .<CategoryJpaEntity>like("name", str)
-            .or(like("description", str))
-        )
+        .map(this::assembleSpecification)
         .orElse(null);
     final var pageResult = this.repository.findAll(Specification.where(specifications), page);
 
@@ -81,5 +79,11 @@ public class CategoryMySQLGateway implements CategoryGateway {
   public List<CategoryID> existsByIds(Iterable<CategoryID> ids) {
     //TODO: Implementar quando chegar na parte de infraestrutura
     return Collections.emptyList();
+  }
+
+  private Specification<CategoryJpaEntity> assembleSpecification(final String str) {
+    final Specification<CategoryJpaEntity> nameLike = like("name", str);
+    final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
+    return nameLike.or(descriptionLike);
   }
 }
