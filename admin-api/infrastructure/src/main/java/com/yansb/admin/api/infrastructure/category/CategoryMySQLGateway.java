@@ -13,17 +13,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
 import static com.yansb.admin.api.infrastructure.utils.SpecificationUtils.like;
 
 @Component
 public class CategoryMySQLGateway implements CategoryGateway {
-  private CategoryRepository repository;
+  private final CategoryRepository repository;
 
   public CategoryMySQLGateway(CategoryRepository repository) {
     this.repository = repository;
@@ -76,9 +74,14 @@ public class CategoryMySQLGateway implements CategoryGateway {
   }
 
   @Override
-  public List<CategoryID> existsByIds(Iterable<CategoryID> ids) {
-    //TODO: Implementar quando chegar na parte de infraestrutura
-    return Collections.emptyList();
+  public List<CategoryID> existsByIds(final Iterable<CategoryID> categoryIDS) {
+    final var ids = StreamSupport.stream(categoryIDS.spliterator(), false)
+        .map(CategoryID::getValue)
+        .toList();
+
+    return this.repository.existsByIds(ids).stream()
+            .map(CategoryID::from)
+            .toList();
   }
 
   private Specification<CategoryJpaEntity> assembleSpecification(final String str) {

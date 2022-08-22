@@ -13,9 +13,11 @@ import com.yansb.admin.api.application.genre.update.UpdateGenreUseCase;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.genre.GenreGateway;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Objects;
 
+@Configuration
 public class GenreUseCaseConfig {
 
   private final CategoryGateway categoryGateway;

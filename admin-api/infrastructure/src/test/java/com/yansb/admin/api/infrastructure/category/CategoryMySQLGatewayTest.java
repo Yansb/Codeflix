@@ -2,6 +2,7 @@ package com.yansb.admin.api.infrastructure.category;
 
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.category.CategoryID;
+import com.yansb.admin.api.domain.genre.GenreID;
 import com.yansb.admin.api.domain.pagination.SearchQuery;
 import com.yansb.admin.api.MySQLGatewayTest;
 import com.yansb.admin.api.infrastructure.category.persistence.CategoryJpaEntity;
@@ -318,6 +319,31 @@ public class CategoryMySQLGatewayTest {
     Assertions.assertEquals(total, actualResult.total());
     Assertions.assertEquals(perPage, actualResult.items().size());
     Assertions.assertEquals(movies.getId(), actualResult.items().get(0).getId());
+  }
+  @Test
+  public void givenPrePersistedCategories_whenCallsExistsByIds_shouldReturnIds(){
+    final var movies = Category.newCategory("Movies", "Most watched Category", true);
+    final var shows = Category.newCategory("Shows", "a category", true);
+    final var documentaries = Category.newCategory("Documentaries", "Lest watched Category", true);
+
+    Assertions.assertEquals(0, categoryRepository.count());
+
+    categoryRepository.saveAll(List.of(
+        CategoryJpaEntity.from(movies),
+        CategoryJpaEntity.from(shows),
+        CategoryJpaEntity.from(documentaries)
+    ));
+
+    Assertions.assertEquals(3, categoryRepository.count());
+    final var ids = List.of(movies.getId(), shows.getId(), CategoryID.from("123"));
+    final var expectedIds = List.of(movies.getId(), shows.getId());
+
+
+    final var actualResult = categoryGateway.existsByIds(ids);
+
+    Assertions.assertTrue(expectedIds.size() == actualResult.size()
+    && expectedIds.containsAll(actualResult)
+        && actualResult.containsAll(expectedIds));
   }
 }
 

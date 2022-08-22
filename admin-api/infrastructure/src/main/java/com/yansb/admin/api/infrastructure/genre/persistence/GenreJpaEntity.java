@@ -24,7 +24,7 @@ public class GenreJpaEntity {
   @Column(name = "active", nullable = false)
   private boolean active;
 
-  @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
   private Set<GenreCategoryJpaEntity> categories;
 
   @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
