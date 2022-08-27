@@ -49,7 +49,7 @@ public class UpdateGenreUseCaseTest extends UseCaseTest {
     final var firstUpdatedAt = aGenre.getUpdatedAt();
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)
@@ -94,7 +94,7 @@ public class UpdateGenreUseCaseTest extends UseCaseTest {
     final var firstUpdatedAt = aGenre.getUpdatedAt();
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)
@@ -146,7 +146,7 @@ public class UpdateGenreUseCaseTest extends UseCaseTest {
     final var firstUpdatedAt = aGenre.getUpdatedAt();
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)
@@ -197,7 +197,7 @@ public class UpdateGenreUseCaseTest extends UseCaseTest {
 
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)
@@ -242,7 +242,7 @@ public class UpdateGenreUseCaseTest extends UseCaseTest {
 
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)

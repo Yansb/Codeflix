@@ -44,7 +44,7 @@ public class UpdateGenreUseCaseIT {
     final var expectedCategories = List.<CategoryID>of();
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)
@@ -81,7 +81,7 @@ public class UpdateGenreUseCaseIT {
     final var expectedCategories = List.<CategoryID>of();
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)
@@ -124,7 +124,7 @@ public class UpdateGenreUseCaseIT {
     final var expectedCategories = List.of(action.getId(), shows.getId());
 
     final var aCommand = UpdateGenreCommand.with(
-            expectedId,
+            expectedId.getValue(),
             expectedName,
             expectedIsActive,
             asString(expectedCategories)
@@ -167,7 +167,7 @@ public class UpdateGenreUseCaseIT {
 
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)
@@ -209,7 +209,7 @@ public class UpdateGenreUseCaseIT {
 
 
     final var aCommand = UpdateGenreCommand.with(
-        expectedId,
+        expectedId.getValue(),
         expectedName,
         expectedIsActive,
         asString(expectedCategories)

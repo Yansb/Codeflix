@@ -33,7 +33,7 @@ public class DefaultUpdateGenreUseCase extends UpdateGenreUseCase {
 
   @Override
   public UpdateGenreOutput execute(UpdateGenreCommand anInput) {
-    final var anId = anInput.id();
+    final var anId = GenreID.from(anInput.id());
     final var aName = anInput.name();
     final var isActive = anInput.isActive();
     final var categories = toCategoryId(anInput.categories());
