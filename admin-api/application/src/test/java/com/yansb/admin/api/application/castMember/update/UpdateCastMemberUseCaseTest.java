@@ -150,7 +150,6 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
     final var expectedId = CastMemberID.from("invalid-id");
     final String expectedName = Fixture.name();
     final var expectedType = Fixture.CastMember.type();
-    final var expectedErrorCount = 1;
     final var expectedErrorMessage = "CastMember with ID invalid-id was not found";
 
 
@@ -168,7 +167,6 @@ public class UpdateCastMemberUseCaseTest extends UseCaseTest {
     // then
 
     Assertions.assertNotNull(actualException);
-    Assertions.assertEquals(actualException.getErrors().size(), expectedErrorCount);
     Assertions.assertEquals(actualException.getMessage(), expectedErrorMessage);
 
     verify(castMemberGateway).findByID(eq(expectedId));
