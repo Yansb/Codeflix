@@ -10,6 +10,10 @@ public final class Fixture {
     return FAKER.name().fullName();
   }
 
+  public static String id() {
+    return FAKER.random().hex();
+  }
+
   public static final class CastMember {
     public static CastMemberType type() {
       return FAKER.options().option(CastMemberType.ACTOR, CastMemberType.DIRECTOR);

@@ -5,7 +5,7 @@ import com.yansb.admin.api.domain.castMember.CastMemberID;
 
 import java.util.Objects;
 
-public final class DefaultDeleteCastMemberUseCase extends DeleteCastMemberUseCase {
+public non-sealed class DefaultDeleteCastMemberUseCase extends DeleteCastMemberUseCase {
 
   private final CastMemberGateway castMemberGateway;
 

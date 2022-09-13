@@ -7,30 +7,30 @@ import com.yansb.admin.api.domain.validation.handler.Notification;
 
 import java.util.Objects;
 
-public final class DefaultCreateCastMemberUseCase extends CreateCastMemberUseCase {
-    private final CastMemberGateway castMemberGateway;
+public non-sealed class DefaultCreateCastMemberUseCase extends CreateCastMemberUseCase {
+  private final CastMemberGateway castMemberGateway;
 
-    public DefaultCreateCastMemberUseCase(final CastMemberGateway aCastMemberGateway) {
-        this.castMemberGateway = Objects.requireNonNull(aCastMemberGateway);
+  public DefaultCreateCastMemberUseCase(final CastMemberGateway aCastMemberGateway) {
+    this.castMemberGateway = Objects.requireNonNull(aCastMemberGateway);
+  }
+
+  @Override
+  public CreateCastMemberOutput execute(final CreateCastMemberCommand anInput) {
+    final var aName = anInput.name();
+    final var aType = anInput.type();
+
+    final var notification = Notification.create();
+
+    final var aMember = notification.validate(() -> CastMember.newMember(aName, aType));
+
+    if (notification.hasError()) {
+      notify(notification);
     }
 
-    @Override
-    public CreateCastMemberOutput execute(final CreateCastMemberCommand anInput) {
-        final var aName = anInput.name();
-        final var aType = anInput.type();
+    return CreateCastMemberOutput.from(this.castMemberGateway.create(aMember));
+  }
 
-        final var notification = Notification.create();
-
-        final var aMember = notification.validate(() -> CastMember.newMember(aName, aType));
-
-        if (notification.hasError()){
-            notify(notification);
-        }
-
-        return CreateCastMemberOutput.from(this.castMemberGateway.create(aMember));
-    }
-
-    private void notify(Notification notification) {
-        throw new NotificationException("Could not create Aggregate CastMember", notification);
-    }
+  private void notify(Notification notification) {
+    throw new NotificationException("Could not create Aggregate CastMember", notification);
+  }
 }
