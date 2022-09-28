@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public class GenreMySQLGateway implements GenreGateway {
   @Override
   public void deleteByID(GenreID anID) {
     final var aGenreId = anID.getValue();
-    if(this.genreRepository.existsById(aGenreId)){
+    if (this.genreRepository.existsById(aGenreId)) {
       this.genreRepository.deleteById(aGenreId);
     }
 
@@ -58,7 +59,7 @@ public class GenreMySQLGateway implements GenreGateway {
 
   @Override
   public Pagination<Genre> findAll(SearchQuery aQuery) {
-    final var page =PageRequest.of(
+    final var page = PageRequest.of(
         aQuery.page(),
         aQuery.perPage(),
         Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
@@ -70,7 +71,7 @@ public class GenreMySQLGateway implements GenreGateway {
         .orElse(null);
 
     final var pageResult =
-      this.genreRepository.findAll(Specification.where(where),page);
+        this.genreRepository.findAll(Specification.where(where), page);
 
     return new Pagination<>(
         pageResult.getNumber(),
@@ -80,7 +81,12 @@ public class GenreMySQLGateway implements GenreGateway {
     );
   }
 
-  private Specification<GenreJpaEntity> assembleSpecification(final String terms){
+  @Override
+  public List<GenreID> existsByIds(Iterable<GenreID> ids) {
+    throw new UnsupportedOperationException();
+  }
+
+  private Specification<GenreJpaEntity> assembleSpecification(final String terms) {
     return SpecificationUtils.like("name", terms);
   }
 }
