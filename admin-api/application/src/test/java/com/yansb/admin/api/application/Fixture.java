@@ -8,8 +8,6 @@ import com.yansb.admin.api.domain.genre.Genre;
 import com.yansb.admin.api.domain.video.Rating;
 import com.yansb.admin.api.domain.video.Resource;
 
-import java.util.Arrays;
-
 import static io.vavr.API.*;
 
 public final class Fixture {
@@ -81,13 +79,8 @@ public final class Fixture {
       return Resource.with(content, contentType, type.name().toLowerCase(), type);
     }
 
-    public static String rating() {
-      final var ratings = Arrays.stream(Rating.values())
-          .map(Rating::getName)
-          .toList()
-          .toArray(new String[0]);
-
-      return FAKER.options().option(ratings);
+    public static Rating rating() {
+      return FAKER.options().option(Rating.values());
     }
 
     public static Double duration() {
