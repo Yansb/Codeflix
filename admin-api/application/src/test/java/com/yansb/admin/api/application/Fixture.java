@@ -7,6 +7,10 @@ import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.genre.Genre;
 import com.yansb.admin.api.domain.video.Rating;
 import com.yansb.admin.api.domain.video.Resource;
+import com.yansb.admin.api.domain.video.Video;
+
+import java.time.Year;
+import java.util.Set;
 
 import static io.vavr.API.*;
 
@@ -27,6 +31,21 @@ public final class Fixture {
 
   public static boolean bool() {
     return FAKER.bool().bool();
+  }
+
+  public static Video aVideo() {
+    return Video.newVideo(
+        Fixture.title(),
+        Videos.description(),
+        Year.of(Fixture.year()),
+        Videos.duration(),
+        Fixture.bool(),
+        Fixture.bool(),
+        Videos.rating(),
+        Set.of(Categories.documentaries().getId()),
+        Set.of(Genres.action().getId()),
+        Set.of(CastMembers.yan().getId(), CastMembers.gabriel().getId())
+    );
   }
 
   public static final class Categories {
@@ -65,6 +84,21 @@ public final class Fixture {
   }
 
   public static final class Videos {
+    public static Video lordOfTheRings() {
+      return Video.newVideo(
+          "Lord of the Rings",
+          description(),
+          Year.of(Fixture.year()),
+          duration(),
+          Fixture.bool(),
+          Fixture.bool(),
+          rating(),
+          Set.of(Categories.documentaries().getId()),
+          Set.of(Genres.action().getId()),
+          Set.of(CastMembers.yan().getId(), CastMembers.gabriel().getId())
+      );
+    }
+
     public static String description() {
       return FAKER.lorem().paragraph();
     }
