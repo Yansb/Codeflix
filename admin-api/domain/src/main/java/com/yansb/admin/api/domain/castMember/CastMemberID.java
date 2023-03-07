@@ -1,9 +1,9 @@
 package com.yansb.admin.api.domain.castMember;
 
 import com.yansb.admin.api.domain.Identifier;
+import com.yansb.admin.api.domain.utils.IdUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class CastMemberID extends Identifier {
     private final String value;
@@ -12,16 +12,13 @@ public class CastMemberID extends Identifier {
         Objects.requireNonNull(anId);
         this.value = anId;
     }
+
     public static CastMemberID unique() {
-        return CastMemberID.from(UUID.randomUUID());
+        return CastMemberID.from(IdUtils.uuid());
     }
 
     public static CastMemberID from(final String anID) {
         return new CastMemberID(anID);
-    }
-
-    public static CastMemberID from(final UUID anId) {
-        return new CastMemberID(anId.toString().toLowerCase());
     }
 
     @Override
