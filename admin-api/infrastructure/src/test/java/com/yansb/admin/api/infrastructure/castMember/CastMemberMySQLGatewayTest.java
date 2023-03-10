@@ -1,7 +1,7 @@
 package com.yansb.admin.api.infrastructure.castMember;
 
-import com.yansb.admin.api.Fixture;
 import com.yansb.admin.api.MySQLGatewayTest;
+import com.yansb.admin.api.domain.Fixture;
 import com.yansb.admin.api.domain.castMember.CastMember;
 import com.yansb.admin.api.domain.castMember.CastMemberID;
 import com.yansb.admin.api.domain.castMember.CastMemberType;
@@ -34,7 +34,7 @@ public class CastMemberMySQLGatewayTest {
   public void givenAValidCastMember_whenCallsCreate_shouldPersistIt() {
     // given
     final var expectedName = Fixture.name();
-    final var expectedType = Fixture.CastMember.type();
+    final var expectedType = Fixture.CastMembers.type();
 
     final var aMember = CastMember.newMember(expectedName, expectedType);
 
@@ -101,7 +101,7 @@ public class CastMemberMySQLGatewayTest {
   @Test
   public void givenAValidCastMember_whenCallsDeleteById_shouldDeleteIt() {
     // given
-    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
     final var expectedId = aMember.getId();
 
     final var aCurrentMember = castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
@@ -118,7 +118,7 @@ public class CastMemberMySQLGatewayTest {
   @Test
   public void givenAnInvalidId_whenCallsDeleteById_shouldBeIgnored() {
     // given
-    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
     final var expectedId = CastMemberID.from("invalid-id");
 
     castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
@@ -134,7 +134,7 @@ public class CastMemberMySQLGatewayTest {
   @Test
   public void givenAValidCastMember_whenCallsFindById_shouldReturnIt() {
     // given
-    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
     final var expectedId = aMember.getId();
 
     castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
@@ -155,7 +155,7 @@ public class CastMemberMySQLGatewayTest {
   @Test
   void givenAnInvalidCastMemberId_whenCallsFindById_shouldThrowNotFound() {
     // given
-    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
     final var expectedId = CastMemberID.from("invalid-id");
 
     castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));

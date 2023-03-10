@@ -1,7 +1,7 @@
 package com.yansb.admin.api.application.video.update;
 
-import com.yansb.admin.api.application.Fixture;
 import com.yansb.admin.api.application.UseCaseTest;
+import com.yansb.admin.api.domain.Fixture;
 import com.yansb.admin.api.domain.castMember.CastMemberGateway;
 import com.yansb.admin.api.domain.castMember.CastMemberID;
 import com.yansb.admin.api.domain.category.CategoryGateway;

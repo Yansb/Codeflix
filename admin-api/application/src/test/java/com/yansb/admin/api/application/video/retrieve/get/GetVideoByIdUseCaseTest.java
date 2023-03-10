@@ -1,7 +1,7 @@
 package com.yansb.admin.api.application.video.retrieve.get;
 
-import com.yansb.admin.api.application.Fixture;
 import com.yansb.admin.api.application.UseCaseTest;
+import com.yansb.admin.api.domain.Fixture;
 import com.yansb.admin.api.domain.exceptions.NotFoundException;
 import com.yansb.admin.api.domain.utils.IdUtils;
 import com.yansb.admin.api.domain.video.*;

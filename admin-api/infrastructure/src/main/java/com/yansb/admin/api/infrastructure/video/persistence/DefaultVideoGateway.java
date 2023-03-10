@@ -17,6 +17,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.yansb.admin.api.domain.utils.CollectionUtils.mapTo;
+import static com.yansb.admin.api.domain.utils.CollectionUtils.nullIfEmpty;
+
 public class DefaultVideoGateway implements VideoGateway {
 
     private final VideoRepository videoRepository;
@@ -63,9 +66,9 @@ public class DefaultVideoGateway implements VideoGateway {
 
         final var actualPage = this.videoRepository.findAll(
                 SqlUtils.like(aQuery.terms()),
-                toString(aQuery.castMembers()),
-                toString(aQuery.categories()),
-                toString(aQuery.genres()),
+                nullIfEmpty(mapTo(aQuery.castMembers(), Identifier::getValue)),
+                nullIfEmpty(mapTo(aQuery.categories(), Identifier::getValue)),
+                nullIfEmpty(mapTo(aQuery.genres(), Identifier::getValue)),
                 page
         );
 
@@ -80,13 +83,5 @@ public class DefaultVideoGateway implements VideoGateway {
     private Video save(Video aVideo) {
         return this.videoRepository.save(VideoJpaEntity.from(aVideo))
                 .toAggregate();
-    }
-
-    private Set<String> toString(final Set<? extends Identifier> ids){
-        if (ids == null || ids.isEmpty()) return null;
-
-        return ids.stream()
-                .map(Identifier::getValue)
-                .collect(Collectors.toSet());
     }
 }

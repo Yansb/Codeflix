@@ -1,7 +1,7 @@
 package com.yansb.admin.api.infrastructure.castMember.models;
 
-import com.yansb.admin.api.Fixture;
 import com.yansb.admin.api.JacksonTest;
+import com.yansb.admin.api.domain.Fixture;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ class UpdateCastMemberRequestTest {
   @Test
   public void testUnmarshall() throws IOException {
     final var expectedName = Fixture.name();
-    final var expectedType = Fixture.CastMember.type();
+    final var expectedType = Fixture.CastMembers.type();
 
     final var json = """
         {

@@ -1,4 +1,4 @@
-package com.yansb.admin.api.application;
+package com.yansb.admin.api.domain;
 
 import com.github.javafaker.Faker;
 import com.yansb.admin.api.domain.castMember.CastMember;
@@ -8,9 +8,12 @@ import com.yansb.admin.api.domain.genre.Genre;
 import com.yansb.admin.api.domain.video.Rating;
 import com.yansb.admin.api.domain.video.Resource;
 import com.yansb.admin.api.domain.video.Video;
+import com.yansb.admin.api.domain.video.VideoPreview;
 
+import java.time.Instant;
 import java.time.Year;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static io.vavr.API.*;
 
@@ -19,6 +22,10 @@ public final class Fixture {
 
   public static String name() {
     return FAKER.name().fullName();
+  }
+
+  public static String id(){
+    return FAKER.idNumber().valid();
   }
 
   public static String title() {
@@ -45,6 +52,24 @@ public final class Fixture {
         Set.of(Categories.documentaries().getId()),
         Set.of(Genres.action().getId()),
         Set.of(CastMembers.yan().getId(), CastMembers.gabriel().getId())
+    );
+  }
+
+  public static VideoPreview aVideoPreview(){
+    return new VideoPreview(
+            Fixture.id(),
+            Fixture.title(),
+            Videos.description(),
+            Instant.from(FAKER.date().past(
+                    100,
+                    TimeUnit.DAYS
+            ).toInstant(
+            )),
+            Instant.from(FAKER.date().past(
+                    100,
+                    TimeUnit.DAYS
+            ).toInstant(
+            ))
     );
   }
 

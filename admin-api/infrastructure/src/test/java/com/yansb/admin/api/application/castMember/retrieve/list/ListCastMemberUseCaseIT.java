@@ -1,7 +1,7 @@
 package com.yansb.admin.api.application.castMember.retrieve.list;
 
-import com.yansb.admin.api.Fixture;
 import com.yansb.admin.api.IntegrationTest;
+import com.yansb.admin.api.domain.Fixture;
 import com.yansb.admin.api.domain.castMember.CastMember;
 import com.yansb.admin.api.domain.castMember.CastMemberGateway;
 import com.yansb.admin.api.domain.pagination.SearchQuery;
@@ -32,8 +32,8 @@ public class ListCastMemberUseCaseIT {
   public void givenAValidQuery_whenCallsListCastMember_shouldReturnAll() {
     // given
     final var members = List.of(
-        CastMember.newMember(Fixture.name(), Fixture.CastMember.type()),
-        CastMember.newMember(Fixture.name(), Fixture.CastMember.type())
+        CastMember.newMember(Fixture.name(), Fixture.CastMembers.type()),
+        CastMember.newMember(Fixture.name(), Fixture.CastMembers.type())
     );
 
     castMemberRepository.saveAll(members.stream().map(CastMemberJpaEntity::from).toList());

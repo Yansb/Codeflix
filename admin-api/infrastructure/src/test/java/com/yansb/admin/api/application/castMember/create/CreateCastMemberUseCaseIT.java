@@ -1,7 +1,7 @@
 package com.yansb.admin.api.application.castMember.create;
 
-import com.yansb.admin.api.Fixture;
 import com.yansb.admin.api.IntegrationTest;
+import com.yansb.admin.api.domain.Fixture;
 import com.yansb.admin.api.domain.castMember.CastMemberGateway;
 import com.yansb.admin.api.domain.castMember.CastMemberType;
 import com.yansb.admin.api.domain.exceptions.NotificationException;
@@ -32,7 +32,7 @@ public class CreateCastMemberUseCaseIT {
   public void givenAValidCommand_whenCallsCreateCastMember_shouldReturnIt() {
     //given
     final var expectedName = Fixture.name();
-    final var expectedType = Fixture.CastMember.type();
+    final var expectedType = Fixture.CastMembers.type();
 
     final var aCommand = CreateCastMemberCommand.with(expectedName, expectedType);
 
@@ -57,7 +57,7 @@ public class CreateCastMemberUseCaseIT {
   public void givenAInvalidName_whenCreateCastMember_shouldThrowANotificationException() {
     //given
     final String expectedName = null;
-    final var expectedType = Fixture.CastMember.type();
+    final var expectedType = Fixture.CastMembers.type();
 
     final var expectedErrorCount = 1;
     final var expectedErrorMessage = "'name' should not be null";

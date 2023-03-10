@@ -1,7 +1,7 @@
 package com.yansb.admin.api.application.castMember.delete;
 
-import com.yansb.admin.api.Fixture;
 import com.yansb.admin.api.IntegrationTest;
+import com.yansb.admin.api.domain.Fixture;
 import com.yansb.admin.api.domain.castMember.CastMember;
 import com.yansb.admin.api.domain.castMember.CastMemberGateway;
 import com.yansb.admin.api.domain.castMember.CastMemberID;
@@ -32,8 +32,8 @@ public class DeleteCastMemberUseCaseIT {
   @Test
   public void givenAValidId_whenCallsDeleteCastMember_shouldDeleteIt() {
     // given
-    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
-    final var aMember2 = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
+    final var aMember2 = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
     final var expectedId = aMember.getId();
 
     this.castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
@@ -53,7 +53,7 @@ public class DeleteCastMemberUseCaseIT {
   @Test
   public void givenAValidId_whenCallsDeleteCastMemberAndGatewayThrowsException_shouldReceiveException() {
     // given
-    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
     final var expectedId = aMember.getId();
 
     this.castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));
@@ -75,7 +75,7 @@ public class DeleteCastMemberUseCaseIT {
   @Test
   public void givenAInvalidId_whenCallsDeleteCastMember_shouldBeOk() {
     // given
-    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMember.type());
+    final var aMember = CastMember.newMember(Fixture.name(), Fixture.CastMembers.type());
     final var expectedId = CastMemberID.from("invalid-id");
 
     this.castMemberRepository.saveAndFlush(CastMemberJpaEntity.from(aMember));

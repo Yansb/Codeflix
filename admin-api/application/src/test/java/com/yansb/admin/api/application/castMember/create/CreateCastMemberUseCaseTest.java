@@ -1,7 +1,7 @@
 package com.yansb.admin.api.application.castMember.create;
 
-import com.yansb.admin.api.application.Fixture;
 import com.yansb.admin.api.application.UseCaseTest;
+import com.yansb.admin.api.domain.Fixture;
 import com.yansb.admin.api.domain.castMember.CastMemberGateway;
 import com.yansb.admin.api.domain.castMember.CastMemberType;
 import com.yansb.admin.api.domain.exceptions.NotificationException;
