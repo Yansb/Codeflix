@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "VideoGenre")
-@Table(name = "video_genres")
+@Table(name = "videos_genres")
 public class VideoGenreJpaEntity {
     @EmbeddedId
     private VideoGenreID id;

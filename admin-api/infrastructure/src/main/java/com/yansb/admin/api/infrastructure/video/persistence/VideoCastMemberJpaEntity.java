@@ -5,7 +5,7 @@ import com.yansb.admin.api.domain.castMember.CastMemberID;
 import javax.persistence.*;
 
 @Entity(name = "VideoCastMember")
-@Table(name = "video_cast_member")
+@Table(name = "videos_cast_members")
 public class VideoCastMemberJpaEntity {
 
     @EmbeddedId

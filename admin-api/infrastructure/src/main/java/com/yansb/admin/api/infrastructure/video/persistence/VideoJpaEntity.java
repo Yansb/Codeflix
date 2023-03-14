@@ -3,6 +3,7 @@ package com.yansb.admin.api.infrastructure.video.persistence;
 import com.yansb.admin.api.domain.castMember.CastMemberID;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.genre.GenreID;
+import com.yansb.admin.api.domain.utils.CollectionUtils;
 import com.yansb.admin.api.domain.video.Rating;
 import com.yansb.admin.api.domain.video.Video;
 import com.yansb.admin.api.domain.video.VideoID;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Entity(name = "Video")
 public class VideoJpaEntity {
     @Id
+    @Column(name = "id", nullable = false)
     private String id;
 
     @Column(name = "title", nullable = false)
@@ -43,10 +45,10 @@ public class VideoJpaEntity {
     @Column(name = "duration", precision = 2)
     private double duration;
 
-    @Column(name = "createdAt", nullable = false, columnDefinition = "DATETIME(6)")
+    @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant createdAt;
 
-    @Column(name = "updatedAt", nullable = false, columnDefinition = "DATETIME(6)")
+    @Column(name = "updated_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant updatedAt;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -67,14 +69,15 @@ public class VideoJpaEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "thumbnail_half_id")
-    private ImageMediaJpaEntity thumbnail_half;
+    private ImageMediaJpaEntity thumbnailHalf;
 
-    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<VideoCategoryJpaEntity> categories;
 
-    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<VideoGenreJpaEntity> genres;
-    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<VideoCastMemberJpaEntity> castMembers;
 
 
@@ -115,7 +118,7 @@ public class VideoJpaEntity {
         this.trailer = trailer;
         this.banner = banner;
         this.thumbnail = thumbnail;
-        this.thumbnail_half = thumbnailHalf;
+        this.thumbnailHalf = thumbnailHalf;
         this.categories = new HashSet<>(3);
         this.genres = new HashSet<>(3);
         this.castMembers = new HashSet<>(3);
@@ -158,6 +161,18 @@ public class VideoJpaEntity {
                 .forEach(entity::addCastMember);
 
         return entity;
+    }
+
+    public Set<CategoryID> getCategoriesID() {
+        return CollectionUtils.mapTo(getCategories(), it -> CategoryID.from(it.getId().getCategoryId()));
+    }
+
+    public Set<GenreID> getGenresID() {
+        return CollectionUtils.mapTo(getGenres(), it -> GenreID.from(it.getId().getGenreId()));
+    }
+
+    public Set<CastMemberID> getCastMembersID() {
+        return CollectionUtils.mapTo(getCastMembers(), it -> CastMemberID.from(it.getId().getCastMemberId()));
     }
 
     public Video toAggregate() {
@@ -308,11 +323,11 @@ public class VideoJpaEntity {
     }
 
     public ImageMediaJpaEntity getThumbnail_half() {
-        return thumbnail_half;
+        return thumbnailHalf;
     }
 
     public void setThumbnail_half(ImageMediaJpaEntity thumbnail_half) {
-        this.thumbnail_half = thumbnail_half;
+        this.thumbnailHalf = thumbnail_half;
     }
 
     public Set<VideoCategoryJpaEntity> getCategories() {
