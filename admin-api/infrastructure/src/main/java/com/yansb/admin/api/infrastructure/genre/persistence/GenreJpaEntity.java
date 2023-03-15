@@ -10,146 +10,146 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity
+@Entity(name = "Genre")
 @Table(name = "genres")
 public class GenreJpaEntity {
 
-  @Id
-  @Column(name = "id", nullable = false)
-  private String id;
+    @Id
+    @Column(name = "id", nullable = false)
+    private String id;
 
-  @Column(name = "name", nullable = false)
-  private String name;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-  @Column(name = "active", nullable = false)
-  private boolean active;
+    @Column(name = "active", nullable = false)
+    private boolean active;
 
-  @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-  private Set<GenreCategoryJpaEntity> categories;
+    @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<GenreCategoryJpaEntity> categories;
 
-  @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
-  private Instant createdAt;
+    @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
+    private Instant createdAt;
 
-  @Column(name = "updated_at", nullable = false, columnDefinition = "DATETIME(6)")
-  private Instant updatedAt;
+    @Column(name = "updated_at", nullable = false, columnDefinition = "DATETIME(6)")
+    private Instant updatedAt;
 
-  @Column(name = "deleted_at", nullable = true, columnDefinition = "DATETIME(6)")
-  private Instant deletedAt;
+    @Column(name = "deleted_at", nullable = true, columnDefinition = "DATETIME(6)")
+    private Instant deletedAt;
 
-  public GenreJpaEntity() {
-  }
+    public GenreJpaEntity() {
+    }
 
-  private GenreJpaEntity(final String aId, final String aName, final boolean aActive, final Instant aCreatedAt, final Instant aUpdatedAt, final Instant aDeletedAt) {
-    this.id = aId;
-    this.name = aName;
-    this.active = aActive;
-    this.categories = new HashSet<>();
-    this.createdAt = aCreatedAt;
-    this.updatedAt = aUpdatedAt;
-    this.deletedAt = aDeletedAt;
-  }
+    private GenreJpaEntity(final String aId, final String aName, final boolean aActive, final Instant aCreatedAt, final Instant aUpdatedAt, final Instant aDeletedAt) {
+        this.id = aId;
+        this.name = aName;
+        this.active = aActive;
+        this.categories = new HashSet<>();
+        this.createdAt = aCreatedAt;
+        this.updatedAt = aUpdatedAt;
+        this.deletedAt = aDeletedAt;
+    }
 
-  public static GenreJpaEntity from(final String aId, final String aName, final boolean aActive, final Instant aCreatedAt, final Instant aUpdatedAt, final Instant aDeletedAt) {
-    return new GenreJpaEntity(aId, aName, aActive, aCreatedAt, aUpdatedAt, aDeletedAt);
-  }
+    public static GenreJpaEntity from(final String aId, final String aName, final boolean aActive, final Instant aCreatedAt, final Instant aUpdatedAt, final Instant aDeletedAt) {
+        return new GenreJpaEntity(aId, aName, aActive, aCreatedAt, aUpdatedAt, aDeletedAt);
+    }
 
-  public static GenreJpaEntity from(final Genre aGenre) {
-    final var anEntity = new GenreJpaEntity(
-        aGenre.getId().getValue(),
-        aGenre.getName(),
-        aGenre.isActive(),
-        aGenre.getCreatedAt(),
-        aGenre.getUpdatedAt(),
-        aGenre.getDeletedAt()
-    );
+    public static GenreJpaEntity from(final Genre aGenre) {
+        final var anEntity = new GenreJpaEntity(
+                aGenre.getId().getValue(),
+                aGenre.getName(),
+                aGenre.isActive(),
+                aGenre.getCreatedAt(),
+                aGenre.getUpdatedAt(),
+                aGenre.getDeletedAt()
+        );
 
-    aGenre.getCategories()
-        .forEach(anEntity::addCategory);
+        aGenre.getCategories()
+                .forEach(anEntity::addCategory);
 
-    return anEntity;
-  }
+        return anEntity;
+    }
 
-  public Genre toAggregate() {
-    return Genre.with(
-        GenreID.from(getId()),
-        getName(),
-        isActive(),
-        getCategoryIDs(),
-        getCreatedAt(),
-        getUpdatedAt(),
-        getDeletedAt()
-    );
-  }
+    public Genre toAggregate() {
+        return Genre.with(
+                GenreID.from(getId()),
+                getName(),
+                isActive(),
+                getCategoryIDs(),
+                getCreatedAt(),
+                getUpdatedAt(),
+                getDeletedAt()
+        );
+    }
 
-  private void addCategory(final CategoryID anId) {
-    this.categories.add(GenreCategoryJpaEntity.from(this, anId));
-  }
+    private void addCategory(final CategoryID anId) {
+        this.categories.add(GenreCategoryJpaEntity.from(this, anId));
+    }
 
-  private void removeCategory(final CategoryID anId) {
-    this.categories.remove(GenreCategoryJpaEntity.from(this, anId));
-  }
-
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
-  }
+    private void removeCategory(final CategoryID anId) {
+        this.categories.remove(GenreCategoryJpaEntity.from(this, anId));
+    }
 
 
-  public List<CategoryID> getCategoryIDs() {
-    return getCategories()
-        .stream().map(it -> CategoryID.from(it.getId().getCategoryId()))
-        .toList();
-  }
+    public String getId() {
+        return id;
+    }
 
-  public Set<GenreCategoryJpaEntity> getCategories() {
-    return categories;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  public void setCategories(Set<GenreCategoryJpaEntity> categories) {
-    this.categories = categories;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public Instant getCreatedAt() {
-    return createdAt;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setCreatedAt(Instant createdAt) {
-    this.createdAt = createdAt;
-  }
+    public boolean isActive() {
+        return active;
+    }
 
-  public Instant getUpdatedAt() {
-    return updatedAt;
-  }
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
-  public void setUpdatedAt(Instant updatedAt) {
-    this.updatedAt = updatedAt;
-  }
 
-  public Instant getDeletedAt() {
-    return deletedAt;
-  }
+    public List<CategoryID> getCategoryIDs() {
+        return getCategories()
+                .stream().map(it -> CategoryID.from(it.getId().getCategoryId()))
+                .toList();
+    }
 
-  public void setDeletedAt(Instant deletedAt) {
-    this.deletedAt = deletedAt;
-  }
+    public Set<GenreCategoryJpaEntity> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<GenreCategoryJpaEntity> categories) {
+        this.categories = categories;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Instant getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Instant deletedAt) {
+        this.deletedAt = deletedAt;
+    }
 }

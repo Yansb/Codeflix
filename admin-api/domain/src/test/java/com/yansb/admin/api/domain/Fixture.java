@@ -80,16 +80,40 @@ public final class Fixture {
     public static final class Categories {
         private static final Category DOCUMENTARIES = Category.newCategory("Documentaries", "some description", true);
 
+        private static final Category TvShows = Category.newCategory("Tv Shows", "some description", true);
+
+        private static final Category MOVIES = Category.newCategory("Movies", "some description", true);
+
         public static Category documentaries() {
             return DOCUMENTARIES.clone();
+        }
+
+        public static Category tvShows() {
+            return TvShows.clone();
+        }
+
+        public static Category movies() {
+            return MOVIES.clone();
         }
     }
 
     public static final class Genres {
         private static final Genre ACTION = Genre.newGenre("Action", true);
 
+        private static final Genre DRAMA = Genre.newGenre("Drama", true);
+
+        private static final Genre HORROR = Genre.newGenre("Horror", true);
+
         public static Genre action() {
             return Genre.with(ACTION);
+        }
+
+        public static Genre drama() {
+            return Genre.with(DRAMA);
+        }
+
+        public static Genre horror() {
+            return Genre.with(HORROR);
         }
 
     }

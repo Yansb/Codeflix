@@ -19,17 +19,17 @@ public interface VideoRepository extends JpaRepository<VideoJpaEntity, String> {
                 v.updatedAt
             )
             from Video v
-                join v.castMembers members
-                join v.categories categories
-                join v.genres genres
+                left join v.castMembers members
+                left join v.categories categories
+                left join v.genres genres
             where
-                ( :terms is null or UPPER(v.title) like :terms)
+                ( :terms is null or UPPER(v.title) like :terms )
             and
-                ( :castMembers is null or members.id.castMemberId in :castMembers)
+                ( :castMembers is null or members.id.castMemberId in :castMembers )
             and
-                ( :categories is null or categories.id.categoryId in :categories)
+                ( :categories is null or categories.id.categoryId in :categories )
             and
-                ( :genres is null or genres.id.genreId in :genres)
+                ( :genres is null or genres.id.genreId in :genres )
             """)
     Page<VideoPreview> findAll(
             @Param("terms") String terms,

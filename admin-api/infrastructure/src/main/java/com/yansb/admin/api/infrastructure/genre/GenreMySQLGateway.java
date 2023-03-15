@@ -16,77 +16,84 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Component
 public class GenreMySQLGateway implements GenreGateway {
 
-  private final GenreRepository genreRepository;
+    private final GenreRepository genreRepository;
 
-  public GenreMySQLGateway(final GenreRepository genreRepository) {
-    this.genreRepository = Objects.requireNonNull(genreRepository);
-  }
-
-  @Override
-  public Genre create(Genre aGenre) {
-    return save(aGenre);
-  }
-
-  private Genre save(Genre aGenre) {
-    return this.genreRepository.save(GenreJpaEntity.from(aGenre))
-        .toAggregate();
-  }
-
-  @Override
-  public void deleteByID(GenreID anID) {
-    final var aGenreId = anID.getValue();
-    if (this.genreRepository.existsById(aGenreId)) {
-      this.genreRepository.deleteById(aGenreId);
+    public GenreMySQLGateway(final GenreRepository genreRepository) {
+        this.genreRepository = Objects.requireNonNull(genreRepository);
     }
 
-  }
+    @Override
+    public Genre create(Genre aGenre) {
+        return save(aGenre);
+    }
 
-  @Override
-  public Optional<Genre> findByID(GenreID anID) {
-    final var aGenreId = anID.getValue();
-    return this.genreRepository.findById(aGenreId)
-        .map(GenreJpaEntity::toAggregate);
-  }
+    private Genre save(Genre aGenre) {
+        return this.genreRepository.save(GenreJpaEntity.from(aGenre))
+                .toAggregate();
+    }
 
-  @Override
-  public Genre update(Genre aGenre) {
-    return save(aGenre);
-  }
+    @Override
+    public void deleteByID(GenreID anID) {
+        final var aGenreId = anID.getValue();
+        if (this.genreRepository.existsById(aGenreId)) {
+            this.genreRepository.deleteById(aGenreId);
+        }
 
-  @Override
-  public Pagination<Genre> findAll(SearchQuery aQuery) {
-    final var page = PageRequest.of(
-        aQuery.page(),
-        aQuery.perPage(),
-        Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
-    );
+    }
 
-    final var where = Optional.ofNullable(aQuery.terms())
-        .filter(str -> !str.isBlank())
-        .map(this::assembleSpecification)
-        .orElse(null);
+    @Override
+    public Optional<Genre> findByID(GenreID anID) {
+        final var aGenreId = anID.getValue();
+        return this.genreRepository.findById(aGenreId)
+                .map(GenreJpaEntity::toAggregate);
+    }
 
-    final var pageResult =
-        this.genreRepository.findAll(Specification.where(where), page);
+    @Override
+    public Genre update(Genre aGenre) {
+        return save(aGenre);
+    }
 
-    return new Pagination<>(
-        pageResult.getNumber(),
-        pageResult.getSize(),
-        pageResult.getTotalElements(),
-        pageResult.map(GenreJpaEntity::toAggregate).stream().toList()
-    );
-  }
+    @Override
+    public Pagination<Genre> findAll(SearchQuery aQuery) {
+        final var page = PageRequest.of(
+                aQuery.page(),
+                aQuery.perPage(),
+                Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
+        );
 
-  @Override
-  public List<GenreID> existsByIds(Iterable<GenreID> ids) {
-    throw new UnsupportedOperationException();
-  }
+        final var where = Optional.ofNullable(aQuery.terms())
+                .filter(str -> !str.isBlank())
+                .map(this::assembleSpecification)
+                .orElse(null);
 
-  private Specification<GenreJpaEntity> assembleSpecification(final String terms) {
-    return SpecificationUtils.like("name", terms);
-  }
+        final var pageResult =
+                this.genreRepository.findAll(Specification.where(where), page);
+
+        return new Pagination<>(
+                pageResult.getNumber(),
+                pageResult.getSize(),
+                pageResult.getTotalElements(),
+                pageResult.map(GenreJpaEntity::toAggregate).stream().toList()
+        );
+    }
+
+    @Override
+    public List<GenreID> existsByIds(Iterable<GenreID> genreIDS) {
+        final var ids = StreamSupport.stream(genreIDS.spliterator(), false)
+                .map(GenreID::getValue)
+                .toList();
+
+        return this.genreRepository.existsByIds(ids).stream()
+                .map(GenreID::from)
+                .toList();
+    }
+
+    private Specification<GenreJpaEntity> assembleSpecification(final String terms) {
+        return SpecificationUtils.like("name", terms);
+    }
 }
