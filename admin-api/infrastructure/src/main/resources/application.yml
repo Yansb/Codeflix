@@ -1,3 +1,22 @@
+google:
+  cloud:
+    credentials: ${GOOGLE_CLOUD_CREDENTIALS}
+    project-id: ${GOOGLE_CLOUD_PROJECT_ID}
+    storage:
+      catalogo-video:
+        bucket: yan_catalogo_videos
+        connect-timeout: 1000
+        read-timeout: 2000
+        retry-delay: 50
+        retry-max-attempts: 2
+        retry-max-delay: 1000
+        retry-multiplier: 1.0
+        
+logging:
+  level:
+    ROOT: INFO
+    com.yansb.admin.api: DEBUG
+
 server:
   port: 8080
   compression:
