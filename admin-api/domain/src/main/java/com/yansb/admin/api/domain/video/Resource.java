@@ -5,53 +5,47 @@ import com.yansb.admin.api.domain.ValueObject;
 import java.util.Objects;
 
 public class Resource extends ValueObject {
-  private final byte[] content;
-  private final String contentType;
-  private final String name;
-  private final Type type;
+    private final String checksum;
 
-  private Resource(
-      final byte[] content,
-      final String contentType,
-      final String name,
-      final Type type
-  ) {
-    this.content = Objects.requireNonNull(content);
-    this.contentType = Objects.requireNonNull(contentType);
-    this.name = Objects.requireNonNull(name);
-    this.type = Objects.requireNonNull(type);
-  }
+    private final byte[] content;
+    private final String contentType;
+    private final String name;
 
-  public static Resource with(
-      final byte[] content,
-      final String contentType,
-      final String name,
-      final Type type
-  ) {
-    return new Resource(content, contentType, name, type);
-  }
+    private Resource(
+            final String checksum,
+            final byte[] content,
+            final String contentType,
+            final String name
+    ) {
+        this.checksum = Objects.requireNonNull(checksum);
+        this.content = Objects.requireNonNull(content);
+        this.contentType = Objects.requireNonNull(contentType);
+        this.name = Objects.requireNonNull(name);
+    }
 
-  public byte[] content() {
-    return content;
-  }
+    public static Resource with(
+            final String checksum,
+            final byte[] content,
+            final String contentType,
+            final String name
+    ) {
+        return new Resource(checksum, content, contentType, name);
+    }
 
-  public String contentType() {
-    return contentType;
-  }
+    public String checksum() {
+        return checksum;
+    }
 
-  public String name() {
-    return name;
-  }
+    public byte[] content() {
+        return content;
+    }
 
-  public Type type() {
-    return type;
-  }
+    public String contentType() {
+        return contentType;
+    }
 
-  public enum Type {
-    VIDEO,
-    TRAILER,
-    BANNER,
-    THUMBNAIL,
-    THUMBNAIL_HALF
-  }
+    public String name() {
+        return name;
+    }
+
 }

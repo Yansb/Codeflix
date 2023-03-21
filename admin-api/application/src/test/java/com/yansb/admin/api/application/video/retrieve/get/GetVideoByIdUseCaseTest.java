@@ -3,8 +3,10 @@ package com.yansb.admin.api.application.video.retrieve.get;
 import com.yansb.admin.api.application.UseCaseTest;
 import com.yansb.admin.api.domain.Fixture;
 import com.yansb.admin.api.domain.exceptions.NotFoundException;
-import com.yansb.admin.api.domain.utils.IdUtils;
-import com.yansb.admin.api.domain.video.*;
+import com.yansb.admin.api.domain.video.Video;
+import com.yansb.admin.api.domain.video.VideoGateway;
+import com.yansb.admin.api.domain.video.VideoID;
+import com.yansb.admin.api.domain.video.VideoMediaType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.yansb.admin.api.domain.Fixture.Videos.audioVideo;
+import static com.yansb.admin.api.domain.Fixture.Videos.image;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -45,11 +49,11 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
         final var expectedGenres = Set.of(Fixture.Genres.action().getId());
         final var expectedMembers = Set.of(Fixture.CastMembers.yan().getId(), Fixture.CastMembers.gabriel().getId());
 
-        final var expectedVideo = audioVideo(Resource.Type.VIDEO);
-        final var expectedTrailer = audioVideo(Resource.Type.TRAILER);
-        final var expectedBanner = image(Resource.Type.BANNER);
-        final var expectedThumbnail = image(Resource.Type.THUMBNAIL);
-        final var expectedThumbHalf = image(Resource.Type.THUMBNAIL_HALF);
+        final var expectedVideo = audioVideo(VideoMediaType.VIDEO);
+        final var expectedTrailer = audioVideo(VideoMediaType.TRAILER);
+        final var expectedBanner = image(VideoMediaType.BANNER);
+        final var expectedThumbnail = image(VideoMediaType.THUMBNAIL);
+        final var expectedThumbHalf = image(VideoMediaType.THUMBNAIL_HALF);
 
         final var aVideo = Video.newVideo(
                         expectedTitle,
@@ -113,16 +117,5 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
 
         // then
         Assertions.assertEquals(expectedErrorMessage, actualError.getMessage());
-    }
-
-
-    private AudioVideoMedia audioVideo(final Resource.Type type) {
-        final var checkSum = "checksum";
-        return AudioVideoMedia.with(IdUtils.uuid(), checkSum, type.name().toLowerCase(), "/videos/" + checkSum, "", MediaStatus.PENDING);
-    }
-
-    private ImageMedia image(final Resource.Type type) {
-        final var checkSum = IdUtils.uuid();
-        return ImageMedia.with(checkSum, type.name().toLowerCase(), "/images/" + checkSum);
     }
 }

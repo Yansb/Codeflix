@@ -5,10 +5,8 @@ import com.yansb.admin.api.domain.castMember.CastMember;
 import com.yansb.admin.api.domain.castMember.CastMemberType;
 import com.yansb.admin.api.domain.category.Category;
 import com.yansb.admin.api.domain.genre.Genre;
-import com.yansb.admin.api.domain.video.Rating;
-import com.yansb.admin.api.domain.video.Resource;
-import com.yansb.admin.api.domain.video.Video;
-import com.yansb.admin.api.domain.video.VideoPreview;
+import com.yansb.admin.api.domain.utils.IdUtils;
+import com.yansb.admin.api.domain.video.*;
 
 import java.time.Instant;
 import java.time.Year;
@@ -76,6 +74,7 @@ public final class Fixture {
                 ))
         );
     }
+
 
     public static final class Categories {
         private static final Category DOCUMENTARIES = Category.newCategory("Documentaries", "some description", true);
@@ -156,14 +155,15 @@ public final class Fixture {
             return FAKER.lorem().paragraph();
         }
 
-        public static Resource resource(final Resource.Type type) {
+        public static Resource resource(final VideoMediaType type) {
             final String contentType = Match(type).of(
-                    Case($(List(Resource.Type.VIDEO, Resource.Type.TRAILER)::contains), "video/mp4"),
+                    Case($(List(VideoMediaType.VIDEO, VideoMediaType.TRAILER)::contains), "video/mp4"),
                     Case($(), "image/jpg")
             );
 
+            final String checksum = IdUtils.uuid();
             final byte[] content = FAKER.internet().image().getBytes();
-            return Resource.with(content, contentType, type.name().toLowerCase(), type);
+            return Resource.with(checksum, content, contentType, type.name().toLowerCase());
         }
 
         public static Rating rating() {
@@ -172,6 +172,16 @@ public final class Fixture {
 
         public static Double duration() {
             return FAKER.number().randomDouble(3, 1, 300);
+        }
+
+        public static AudioVideoMedia audioVideo(final VideoMediaType type) {
+            final var checkSum = "checksum";
+            return AudioVideoMedia.with(IdUtils.uuid(), checkSum, type.name().toLowerCase(), "/videos/" + checkSum, "", MediaStatus.PENDING);
+        }
+
+        public static ImageMedia image(final VideoMediaType type) {
+            final var checkSum = IdUtils.uuid();
+            return ImageMedia.with(checkSum, type.name().toLowerCase(), "/images/" + checkSum);
         }
     }
 }
