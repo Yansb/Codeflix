@@ -56,7 +56,7 @@ public class GCStorageService implements StorageService {
     public void store(final String name, final Resource resource) {
         final var blobInfo = BlobInfo.newBuilder(this.bucket, name)
                 .setContentType(resource.contentType())
-                .setCrc32cFromHexString(resource.contentType())
+                .setCrc32cFromHexString(resource.checksum())
                 .build();
 
         this.storage.create(blobInfo, resource.content());
