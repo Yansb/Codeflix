@@ -183,5 +183,9 @@ public final class Fixture {
             final var checkSum = IdUtils.uuid();
             return ImageMedia.with(checkSum, type.name().toLowerCase(), "/images/" + checkSum);
         }
+
+        public static VideoMediaType mediaType() {
+            return FAKER.options().option(VideoMediaType.values());
+        }
     }
 }

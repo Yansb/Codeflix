@@ -3,7 +3,7 @@ google:
     credentials: ${GOOGLE_CLOUD_CREDENTIALS}
     project-id: ${GOOGLE_CLOUD_PROJECT_ID}
     storage:
-      catalogo-video:
+      catalogo-videos:
         bucket: yan_catalogo_videos
         connect-timeout: 1000
         read-timeout: 2000
@@ -11,7 +11,7 @@ google:
         retry-max-attempts: 2
         retry-max-delay: 1000
         retry-multiplier: 1.0
-        
+
 logging:
   level:
     ROOT: INFO
@@ -51,3 +51,7 @@ spring:
       "[hibernate.dialect]": org.hibernate.dialect.MySQL5InnoDBDialect
       "[hibernate.generate_statistics]": true
       "[hibernate.connection.provider_disables_autocommit]": true
+storage:
+  catalogo-videos:
+    location-pattern: videoId-{videoId}
+    filename-pattern: type-{type}

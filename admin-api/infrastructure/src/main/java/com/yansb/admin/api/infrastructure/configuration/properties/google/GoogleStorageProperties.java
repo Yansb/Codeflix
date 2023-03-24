@@ -1,4 +1,4 @@
-package com.yansb.admin.api.infrastructure.configuration.properties;
+package com.yansb.admin.api.infrastructure.configuration.properties.google;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,9 +1,11 @@
-package com.yansb.admin.api.infrastructure.video.persistence;
+package com.yansb.admin.api.infrastructure.video;
 
 import com.yansb.admin.api.domain.Identifier;
 import com.yansb.admin.api.domain.pagination.Pagination;
 import com.yansb.admin.api.domain.video.*;
 import com.yansb.admin.api.infrastructure.utils.SqlUtils;
+import com.yansb.admin.api.infrastructure.video.persistence.VideoJpaEntity;
+import com.yansb.admin.api.infrastructure.video.persistence.VideoRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;

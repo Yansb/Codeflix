@@ -6,8 +6,8 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.http.HttpTransportOptions;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-import com.yansb.admin.api.infrastructure.configuration.properties.GoogleCloudProperties;
-import com.yansb.admin.api.infrastructure.configuration.properties.GoogleStorageProperties;
+import com.yansb.admin.api.infrastructure.configuration.properties.google.GoogleCloudProperties;
+import com.yansb.admin.api.infrastructure.configuration.properties.google.GoogleStorageProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ public class GoogleCloudConfig {
     }
 
     @Bean
-    @ConfigurationProperties("google.cloud.storage.catalogo-video")
+    @ConfigurationProperties("google.cloud.storage.catalogo-videos")
     public GoogleStorageProperties googleStorageProperties() {
         return new GoogleStorageProperties();
     }

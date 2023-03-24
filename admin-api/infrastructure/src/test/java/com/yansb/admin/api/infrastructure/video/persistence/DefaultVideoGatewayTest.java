@@ -12,6 +12,7 @@ import com.yansb.admin.api.domain.genre.Genre;
 import com.yansb.admin.api.domain.genre.GenreGateway;
 import com.yansb.admin.api.domain.genre.GenreID;
 import com.yansb.admin.api.domain.video.*;
+import com.yansb.admin.api.infrastructure.video.DefaultVideoGateway;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
