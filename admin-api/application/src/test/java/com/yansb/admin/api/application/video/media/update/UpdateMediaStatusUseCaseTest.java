@@ -42,7 +42,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.lordOfTheRings()
-                .setVideo(expectedMedia);
+                .updateVideoMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -95,7 +95,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.lordOfTheRings()
-                .setVideo(expectedMedia);
+                .updateVideoMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -146,7 +146,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.lordOfTheRings()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -199,7 +199,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.lordOfTheRings()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -250,7 +250,7 @@ class UpdateMediaStatusUseCaseTest extends UseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.lordOfTheRings()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 

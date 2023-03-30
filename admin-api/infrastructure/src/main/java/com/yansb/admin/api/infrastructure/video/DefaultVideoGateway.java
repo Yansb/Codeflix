@@ -3,6 +3,8 @@ package com.yansb.admin.api.infrastructure.video;
 import com.yansb.admin.api.domain.Identifier;
 import com.yansb.admin.api.domain.pagination.Pagination;
 import com.yansb.admin.api.domain.video.*;
+import com.yansb.admin.api.infrastructure.configuration.annotations.VideoCreatedQueue;
+import com.yansb.admin.api.infrastructure.services.EventService;
 import com.yansb.admin.api.infrastructure.utils.SqlUtils;
 import com.yansb.admin.api.infrastructure.video.persistence.VideoJpaEntity;
 import com.yansb.admin.api.infrastructure.video.persistence.VideoRepository;
@@ -21,9 +23,11 @@ import static com.yansb.admin.api.domain.utils.CollectionUtils.nullIfEmpty;
 public class DefaultVideoGateway implements VideoGateway {
 
     private final VideoRepository videoRepository;
+    private final EventService eventService;
 
-    public DefaultVideoGateway(VideoRepository videoRepository) {
+    public DefaultVideoGateway(@VideoCreatedQueue final EventService eventService, final VideoRepository videoRepository) {
         this.videoRepository = Objects.requireNonNull(videoRepository);
+        this.eventService = Objects.requireNonNull(eventService);
     }
 
     @Override
@@ -79,7 +83,11 @@ public class DefaultVideoGateway implements VideoGateway {
     }
 
     private Video save(Video aVideo) {
-        return this.videoRepository.save(VideoJpaEntity.from(aVideo))
+        final var result = this.videoRepository.save(VideoJpaEntity.from(aVideo))
                 .toAggregate();
+
+        aVideo.publishDomainEvents(this.eventService::send);
+
+        return result;
     }
 }

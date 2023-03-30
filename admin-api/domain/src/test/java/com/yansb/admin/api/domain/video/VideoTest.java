@@ -3,11 +3,13 @@ package com.yansb.admin.api.domain.video;
 import com.yansb.admin.api.domain.castMember.CastMemberID;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.genre.GenreID;
+import com.yansb.admin.api.domain.utils.InstantUtils;
 import com.yansb.admin.api.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Year;
+import java.util.List;
 import java.util.Set;
 
 public class VideoTest {
@@ -62,6 +64,7 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getBanner().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
+        Assertions.assertTrue(actualVideo.getDomainEvents().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
     }
@@ -78,9 +81,13 @@ public class VideoTest {
         final var expectedOpened = false;
         final var expectedPublished = false;
         final var expectedRating = Rating.L;
+        final var expectedEvent = new VideoMediaCreated("ID", "File");
+        final var expectedEventCount = 1;
         final var expectedCategories = Set.of(CategoryID.unique());
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedMembers = Set.of(CastMemberID.unique());
+        final var expectedEvents = List.of(expectedEvent);
+
         final var aVideo = Video.newVideo(
                 "wrong title",
                 "wrong description",
@@ -94,6 +101,7 @@ public class VideoTest {
                 Set.of()
         );
 
+        aVideo.registerEvent(expectedEvent);
         // when
         final var actualVideo = Video.with(aVideo).update(
                 expectedTitle,
@@ -129,11 +137,14 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
 
+        Assertions.assertEquals(expectedEventCount, actualVideo.getDomainEvents().size());
+        Assertions.assertEquals(expectedEvents, actualVideo.getDomainEvents());
+
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
     }
 
     @Test
-    public void givenValidVideo_whenCallsSetVideo_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateVideoMedia_shouldReturnUpdated() {
         // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
@@ -147,6 +158,7 @@ public class VideoTest {
         final var expectedCategories = Set.of(CategoryID.unique());
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedMembers = Set.of(CastMemberID.unique());
+        final var expectedDomainEventSize = 1;
         final var aVideo = Video.newVideo(
                 expectedTitle,
                 expectedDescription,
@@ -161,8 +173,10 @@ public class VideoTest {
         );
 
         final var aVideoMedia = AudioVideoMedia.with("abc", "Video.mp4", "/123/videos");
+
         // when
-        final var actualVideo = Video.with(aVideo).setVideo(aVideoMedia);
+        final var actualVideo = Video.with(aVideo).updateVideoMedia(aVideoMedia);
+        final var actualEvent = (VideoMediaCreated) actualVideo.getDomainEvents().get(0);
 
         // then
         Assertions.assertNotNull(actualVideo);
@@ -184,12 +198,16 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getBanner().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
+        Assertions.assertEquals(actualVideo.getDomainEvents().size(), expectedDomainEventSize);
+        Assertions.assertEquals(actualEvent.resourceId(), actualVideo.getId().getValue());
+        Assertions.assertEquals(actualEvent.filePath(), aVideoMedia.rawLocation());
+        Assertions.assertNotNull(actualEvent.occurredOn());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
     }
 
     @Test
-    public void givenValidVideo_whenCallsSetTrailer_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateTrailerMedia_shouldReturnUpdated() {
         // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
@@ -203,6 +221,7 @@ public class VideoTest {
         final var expectedCategories = Set.of(CategoryID.unique());
         final var expectedGenres = Set.of(GenreID.unique());
         final var expectedMembers = Set.of(CastMemberID.unique());
+        final var expectedDomainEventSize = 1;
         final var aVideo = Video.newVideo(
                 expectedTitle,
                 expectedDescription,
@@ -217,8 +236,9 @@ public class VideoTest {
         );
 
         final var aTrailerMedia = AudioVideoMedia.with("abc", "trailer.mp4", "/123/trailers");
+
         // when
-        final var actualVideo = Video.with(aVideo).setTrailer(aTrailerMedia);
+        final var actualVideo = Video.with(aVideo).updateTrailerMedia(aTrailerMedia);
 
         // then
         Assertions.assertNotNull(actualVideo);
@@ -240,12 +260,19 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getBanner().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnail().isEmpty());
         Assertions.assertTrue(actualVideo.getThumbnailHalf().isEmpty());
+        Assertions.assertEquals(actualVideo.getDomainEvents().size(), expectedDomainEventSize);
+
+        final var actualEvent = (VideoMediaCreated) actualVideo.getDomainEvents().get(0);
+        Assertions.assertEquals(actualEvent.resourceId(), aVideo.getId().getValue());
+        Assertions.assertEquals(actualEvent.filePath(), aTrailerMedia.rawLocation());
+        Assertions.assertNotNull(actualEvent.occurredOn());
+
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
     }
 
     @Test
-    public void givenValidVideo_whenCallsSetBanner_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateBannerMedia_shouldReturnUpdated() {
         // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
@@ -274,7 +301,7 @@ public class VideoTest {
 
         final var aBannerMedia = ImageMedia.with("abc", "trailer.mp4", "/123/trailers");
         // when
-        final var actualVideo = Video.with(aVideo).setBanner(aBannerMedia);
+        final var actualVideo = Video.with(aVideo).updateBannerMedia(aBannerMedia);
 
         // then
         Assertions.assertNotNull(actualVideo);
@@ -301,7 +328,7 @@ public class VideoTest {
     }
 
     @Test
-    public void givenValidVideo_whenCallsSetThumbnail_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateThumbnailMedia_shouldReturnUpdated() {
         // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
@@ -330,7 +357,7 @@ public class VideoTest {
 
         final var aThumbMedia = ImageMedia.with("abc", "trailer.mp4", "/123/trailers");
         // when
-        final var actualVideo = Video.with(aVideo).setThumbnail(aThumbMedia);
+        final var actualVideo = Video.with(aVideo).updateThumbnailMedia(aThumbMedia);
 
         // then
         Assertions.assertNotNull(actualVideo);
@@ -357,7 +384,7 @@ public class VideoTest {
     }
 
     @Test
-    public void givenValidVideo_whenCallsSetThumbnailHalf_shouldReturnUpdated() {
+    public void givenValidVideo_whenCallsUpdateThumbnailHalfMedia_shouldReturnUpdated() {
         // given
         final var expectedTitle = "System Design Interviews";
         final var expectedDescription = """
@@ -386,7 +413,7 @@ public class VideoTest {
 
         final var aThumb = ImageMedia.with("abc", "trailer.mp4", "/123/trailers");
         // when
-        final var actualVideo = Video.with(aVideo).setThumbnailHalf(aThumb);
+        final var actualVideo = Video.with(aVideo).updateThumbnailHalfMedia(aThumb);
 
         // then
         Assertions.assertNotNull(actualVideo);
@@ -410,5 +437,47 @@ public class VideoTest {
         Assertions.assertTrue(actualVideo.getBanner().isEmpty());
 
         Assertions.assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));
+    }
+
+    @Test
+    public void givenValidVideo_whenCallsWith_shouldCreateWithoutEvents() {
+        // given
+        final var expectedTitle = "System Design Interviews";
+        final var expectedDescription = """
+                This course is designed to help you prepare for system design interviews.
+                        """;
+        final var expectedLaunchedAt = Year.of(2022);
+        final var expectedDuration = 120.10;
+        final var expectedOpened = false;
+        final var expectedPublished = false;
+        final var expectedRating = Rating.L;
+        final var expectedCategories = Set.of(CategoryID.unique());
+        final var expectedGenres = Set.of(GenreID.unique());
+        final var expectedMembers = Set.of(CastMemberID.unique());
+
+        // when
+        final var actualVideo = Video.with(
+                VideoID.unique(),
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchedAt,
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating,
+                InstantUtils.now(),
+                InstantUtils.now(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                expectedCategories,
+                expectedGenres,
+                expectedMembers
+        );
+
+        // then
+        Assertions.assertNotNull(actualVideo.getDomainEvents());
     }
 }
