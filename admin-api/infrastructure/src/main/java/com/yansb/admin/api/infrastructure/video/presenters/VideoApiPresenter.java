@@ -1,10 +1,12 @@
 package com.yansb.admin.api.infrastructure.video.presenters;
 
 import com.yansb.admin.api.application.video.retrieve.get.VideoOutput;
+import com.yansb.admin.api.application.video.update.UpdateVideoOutput;
 import com.yansb.admin.api.domain.video.AudioVideoMedia;
 import com.yansb.admin.api.domain.video.ImageMedia;
 import com.yansb.admin.api.infrastructure.video.models.AudioVideoMediaResponse;
 import com.yansb.admin.api.infrastructure.video.models.ImageMediaResponse;
+import com.yansb.admin.api.infrastructure.video.models.UpdateVideoResponse;
 import com.yansb.admin.api.infrastructure.video.models.VideoResponse;
 
 public interface VideoApiPresenter {
@@ -55,5 +57,9 @@ public interface VideoApiPresenter {
                 imageMedia.name(),
                 imageMedia.location()
         );
+    }
+
+    static UpdateVideoResponse present(final UpdateVideoOutput output) {
+        return new UpdateVideoResponse(output.id());
     }
 }

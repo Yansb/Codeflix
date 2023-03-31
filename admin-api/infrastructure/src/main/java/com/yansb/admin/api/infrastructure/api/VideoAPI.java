@@ -1,11 +1,13 @@
 package com.yansb.admin.api.infrastructure.api;
 
 import com.yansb.admin.api.infrastructure.video.models.CreateVideoRequest;
+import com.yansb.admin.api.infrastructure.video.models.UpdateVideoRequest;
 import com.yansb.admin.api.infrastructure.video.models.VideoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,4 +72,31 @@ public interface VideoAPI {
 
     })
     VideoResponse getById(@PathVariable(name = "id") String id);
+
+    @PutMapping(value = "{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Update a video by it's identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Video updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Video not found"),
+            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred")
+
+    })
+    ResponseEntity<?> update(
+            @PathVariable(name = "id") String id,
+            @RequestBody UpdateVideoRequest payload
+    );
+
+    @DeleteMapping(value = "{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete a video by it's identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Video deleted"),
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred")
+
+    })
+    void deleteById(@PathVariable(name = "id") String id);
 }

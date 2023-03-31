@@ -2,11 +2,15 @@ package com.yansb.admin.api.infrastructure.api.controllers;
 
 import com.yansb.admin.api.application.video.create.CreateVideoCommand;
 import com.yansb.admin.api.application.video.create.CreateVideoUseCase;
+import com.yansb.admin.api.application.video.delete.DeleteVideoUseCase;
 import com.yansb.admin.api.application.video.retrieve.get.GetVideoByIdUseCase;
+import com.yansb.admin.api.application.video.update.UpdateVideoCommand;
+import com.yansb.admin.api.application.video.update.UpdateVideoUseCase;
 import com.yansb.admin.api.domain.video.Resource;
 import com.yansb.admin.api.infrastructure.api.VideoAPI;
 import com.yansb.admin.api.infrastructure.utils.HashingUtils;
 import com.yansb.admin.api.infrastructure.video.models.CreateVideoRequest;
+import com.yansb.admin.api.infrastructure.video.models.UpdateVideoRequest;
 import com.yansb.admin.api.infrastructure.video.models.VideoResponse;
 import com.yansb.admin.api.infrastructure.video.presenters.VideoApiPresenter;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +25,20 @@ import java.util.Set;
 public class VideoController implements VideoAPI {
 
     private final CreateVideoUseCase createVideoUseCase;
-
     private final GetVideoByIdUseCase getVideoByIdUseCase;
+    private final UpdateVideoUseCase updateVideoUseCase;
+    private final DeleteVideoUseCase deleteVideoUseCase;
 
     public VideoController(
             final CreateVideoUseCase createVideoUseCase,
-            final GetVideoByIdUseCase getVideoByIdUseCase
+            final GetVideoByIdUseCase getVideoByIdUseCase,
+            final UpdateVideoUseCase updateVideoUseCase,
+            final DeleteVideoUseCase deleteVideoUseCase
     ) {
         this.createVideoUseCase = Objects.requireNonNull(createVideoUseCase);
         this.getVideoByIdUseCase = Objects.requireNonNull(getVideoByIdUseCase);
+        this.updateVideoUseCase = Objects.requireNonNull(updateVideoUseCase);
+        this.deleteVideoUseCase = Objects.requireNonNull(deleteVideoUseCase);
     }
 
     @Override
@@ -95,6 +104,34 @@ public class VideoController implements VideoAPI {
     @Override
     public VideoResponse getById(final String anId) {
         return VideoApiPresenter.present(this.getVideoByIdUseCase.execute(anId));
+    }
+
+    @Override
+    public ResponseEntity<?> update(String id, UpdateVideoRequest payload) {
+        final var aCmd = UpdateVideoCommand.with(
+                id,
+                payload.title(),
+                payload.description(),
+                payload.yearLaunched(),
+                payload.duration(),
+                payload.opened(),
+                payload.published(),
+                payload.rating(),
+                payload.categories(),
+                payload.genres(),
+                payload.castMembers()
+        );
+
+        final var output = this.updateVideoUseCase.execute(aCmd);
+
+        return ResponseEntity.ok()
+                .location(URI.create("/videos/" + output.id()))
+                .body(VideoApiPresenter.present(output));
+    }
+
+    @Override
+    public void deleteById(final String id) {
+        this.deleteVideoUseCase.execute(id);
     }
 
     private Resource resourceOf(final MultipartFile part) {
