@@ -6,8 +6,12 @@ import com.yansb.admin.api.application.video.create.CreateVideoCommand;
 import com.yansb.admin.api.application.video.create.CreateVideoOutput;
 import com.yansb.admin.api.application.video.create.CreateVideoUseCase;
 import com.yansb.admin.api.application.video.delete.DeleteVideoUseCase;
+import com.yansb.admin.api.application.video.media.get.GetMediaUseCase;
+import com.yansb.admin.api.application.video.media.get.MediaOutput;
 import com.yansb.admin.api.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.yansb.admin.api.application.video.retrieve.get.VideoOutput;
+import com.yansb.admin.api.application.video.retrieve.list.ListVideosUseCase;
+import com.yansb.admin.api.application.video.retrieve.list.VideoListOutput;
 import com.yansb.admin.api.application.video.update.UpdateVideoCommand;
 import com.yansb.admin.api.application.video.update.UpdateVideoOutput;
 import com.yansb.admin.api.application.video.update.UpdateVideoUseCase;
@@ -16,18 +20,17 @@ import com.yansb.admin.api.domain.castMember.CastMemberID;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.exceptions.NotificationException;
 import com.yansb.admin.api.domain.genre.GenreID;
+import com.yansb.admin.api.domain.pagination.Pagination;
 import com.yansb.admin.api.domain.validation.Error;
-import com.yansb.admin.api.domain.video.Video;
-import com.yansb.admin.api.domain.video.VideoID;
-import com.yansb.admin.api.domain.video.VideoMediaType;
+import com.yansb.admin.api.domain.video.*;
 import com.yansb.admin.api.infrastructure.video.models.CreateVideoRequest;
 import com.yansb.admin.api.infrastructure.video.models.UpdateVideoRequest;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,9 +38,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.yansb.admin.api.domain.utils.CollectionUtils.mapTo;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -63,6 +69,12 @@ class VideoAPITest {
 
     @MockBean
     private DeleteVideoUseCase deleteVideoUseCase;
+
+    @MockBean
+    private ListVideosUseCase listVideosUseCase;
+
+    @MockBean
+    private GetMediaUseCase getMediaUseCase;
 
     @Test
     public void givenAValidCommand_whenCallsCreateFull_shouldReturnAnId() throws Exception {
@@ -120,7 +132,7 @@ class VideoAPITest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.id", Matchers.equalTo(expectedId.getValue())));
+                .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())));
 
         //then
         final var cmdCaptor = ArgumentCaptor.forClass(CreateVideoCommand.class);
@@ -191,7 +203,7 @@ class VideoAPITest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.id", Matchers.equalTo(expectedId.getValue())));
+                .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())));
 
         //then
 
@@ -273,43 +285,43 @@ class VideoAPITest {
         //then
         response.andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.id", Matchers.equalTo(expectedId)))
-                .andExpect(jsonPath("$.title", Matchers.equalTo(expectedTitle)))
-                .andExpect(jsonPath("$.description", Matchers.equalTo(expectedDescription)))
-                .andExpect(jsonPath("$.year_launched", Matchers.equalTo(expectedLaunchYear.getValue())))
-                .andExpect(jsonPath("$.duration", Matchers.equalTo(expectedDuration)))
-                .andExpect(jsonPath("$.opened", Matchers.equalTo(expectedOpened)))
-                .andExpect(jsonPath("$.published", Matchers.equalTo(expectedPublished)))
-                .andExpect(jsonPath("$.rating", Matchers.equalTo(expectedRating.getName())))
-                .andExpect(jsonPath("$.created_at", Matchers.equalTo(aVideo.getCreatedAt().toString())))
-                .andExpect(jsonPath("$.updated_at", Matchers.equalTo(aVideo.getUpdatedAt().toString())))
-                .andExpect(jsonPath("$.banner.id", Matchers.equalTo(expectedBanner.id())))
-                .andExpect(jsonPath("$.banner.name", Matchers.equalTo(expectedBanner.name())))
-                .andExpect(jsonPath("$.banner.location", Matchers.equalTo(expectedBanner.location())))
-                .andExpect(jsonPath("$.banner.checksum", Matchers.equalTo(expectedBanner.checksum())))
-                .andExpect(jsonPath("$.thumbnail.id", Matchers.equalTo(expectedThumb.id())))
-                .andExpect(jsonPath("$.thumbnail.name", Matchers.equalTo(expectedThumb.name())))
-                .andExpect(jsonPath("$.thumbnail.location", Matchers.equalTo(expectedThumb.location())))
-                .andExpect(jsonPath("$.thumbnail.checksum", Matchers.equalTo(expectedThumb.checksum())))
-                .andExpect(jsonPath("$.thumbnail_half.id", Matchers.equalTo(expectedThumbHalf.id())))
-                .andExpect(jsonPath("$.thumbnail_half.name", Matchers.equalTo(expectedThumbHalf.name())))
-                .andExpect(jsonPath("$.thumbnail_half.location", Matchers.equalTo(expectedThumbHalf.location())))
-                .andExpect(jsonPath("$.thumbnail_half.checksum", Matchers.equalTo(expectedThumbHalf.checksum())))
-                .andExpect(jsonPath("$.video.id", Matchers.equalTo(expectedVideo.id())))
-                .andExpect(jsonPath("$.video.name", Matchers.equalTo(expectedVideo.name())))
-                .andExpect(jsonPath("$.video.checksum", Matchers.equalTo(expectedVideo.checksum())))
-                .andExpect(jsonPath("$.video.location", Matchers.equalTo(expectedVideo.rawLocation())))
-                .andExpect(jsonPath("$.video.encoded_location", Matchers.equalTo(expectedVideo.encodedLocation())))
-                .andExpect(jsonPath("$.video.status", Matchers.equalTo(expectedVideo.status().name())))
-                .andExpect(jsonPath("$.trailer.id", Matchers.equalTo(expectedTrailer.id())))
-                .andExpect(jsonPath("$.trailer.name", Matchers.equalTo(expectedTrailer.name())))
-                .andExpect(jsonPath("$.trailer.checksum", Matchers.equalTo(expectedTrailer.checksum())))
-                .andExpect(jsonPath("$.trailer.location", Matchers.equalTo(expectedTrailer.rawLocation())))
-                .andExpect(jsonPath("$.trailer.encoded_location", Matchers.equalTo(expectedTrailer.encodedLocation())))
-                .andExpect(jsonPath("$.trailer.status", Matchers.equalTo(expectedTrailer.status().name())))
-                .andExpect(jsonPath("$.categories_id", Matchers.equalTo(new ArrayList(expectedCategories))))
-                .andExpect(jsonPath("$.genres_id", Matchers.equalTo(new ArrayList(expectedGenres))))
-                .andExpect(jsonPath("$.cast_members_id", Matchers.equalTo(new ArrayList(expectedMembers))));
+                .andExpect(jsonPath("$.id", equalTo(expectedId)))
+                .andExpect(jsonPath("$.title", equalTo(expectedTitle)))
+                .andExpect(jsonPath("$.description", equalTo(expectedDescription)))
+                .andExpect(jsonPath("$.year_launched", equalTo(expectedLaunchYear.getValue())))
+                .andExpect(jsonPath("$.duration", equalTo(expectedDuration)))
+                .andExpect(jsonPath("$.opened", equalTo(expectedOpened)))
+                .andExpect(jsonPath("$.published", equalTo(expectedPublished)))
+                .andExpect(jsonPath("$.rating", equalTo(expectedRating.getName())))
+                .andExpect(jsonPath("$.created_at", equalTo(aVideo.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.updated_at", equalTo(aVideo.getUpdatedAt().toString())))
+                .andExpect(jsonPath("$.banner.id", equalTo(expectedBanner.id())))
+                .andExpect(jsonPath("$.banner.name", equalTo(expectedBanner.name())))
+                .andExpect(jsonPath("$.banner.location", equalTo(expectedBanner.location())))
+                .andExpect(jsonPath("$.banner.checksum", equalTo(expectedBanner.checksum())))
+                .andExpect(jsonPath("$.thumbnail.id", equalTo(expectedThumb.id())))
+                .andExpect(jsonPath("$.thumbnail.name", equalTo(expectedThumb.name())))
+                .andExpect(jsonPath("$.thumbnail.location", equalTo(expectedThumb.location())))
+                .andExpect(jsonPath("$.thumbnail.checksum", equalTo(expectedThumb.checksum())))
+                .andExpect(jsonPath("$.thumbnail_half.id", equalTo(expectedThumbHalf.id())))
+                .andExpect(jsonPath("$.thumbnail_half.name", equalTo(expectedThumbHalf.name())))
+                .andExpect(jsonPath("$.thumbnail_half.location", equalTo(expectedThumbHalf.location())))
+                .andExpect(jsonPath("$.thumbnail_half.checksum", equalTo(expectedThumbHalf.checksum())))
+                .andExpect(jsonPath("$.video.id", equalTo(expectedVideo.id())))
+                .andExpect(jsonPath("$.video.name", equalTo(expectedVideo.name())))
+                .andExpect(jsonPath("$.video.checksum", equalTo(expectedVideo.checksum())))
+                .andExpect(jsonPath("$.video.location", equalTo(expectedVideo.rawLocation())))
+                .andExpect(jsonPath("$.video.encoded_location", equalTo(expectedVideo.encodedLocation())))
+                .andExpect(jsonPath("$.video.status", equalTo(expectedVideo.status().name())))
+                .andExpect(jsonPath("$.trailer.id", equalTo(expectedTrailer.id())))
+                .andExpect(jsonPath("$.trailer.name", equalTo(expectedTrailer.name())))
+                .andExpect(jsonPath("$.trailer.checksum", equalTo(expectedTrailer.checksum())))
+                .andExpect(jsonPath("$.trailer.location", equalTo(expectedTrailer.rawLocation())))
+                .andExpect(jsonPath("$.trailer.encoded_location", equalTo(expectedTrailer.encodedLocation())))
+                .andExpect(jsonPath("$.trailer.status", equalTo(expectedTrailer.status().name())))
+                .andExpect(jsonPath("$.categories_id", equalTo(new ArrayList(expectedCategories))))
+                .andExpect(jsonPath("$.genres_id", equalTo(new ArrayList(expectedGenres))))
+                .andExpect(jsonPath("$.cast_members_id", equalTo(new ArrayList(expectedMembers))));
 
     }
 
@@ -358,7 +370,7 @@ class VideoAPITest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.id", Matchers.equalTo(expectedId.getValue())));
+                .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())));
 
         //then
 
@@ -436,9 +448,9 @@ class VideoAPITest {
 
         response.andExpect(status().isUnprocessableEntity())
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.message", Matchers.equalTo(expectedErrorMessage)))
-                .andExpect(jsonPath("$.errors", Matchers.hasSize(expectedErrorCount)))
-                .andExpect(jsonPath("$.errors[0].message", Matchers.equalTo(expectedErrorMessage)));
+                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)))
+                .andExpect(jsonPath("$.errors", hasSize(expectedErrorCount)))
+                .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
 
         verify(updateVideoUseCase).execute(any());
     }
@@ -457,5 +469,143 @@ class VideoAPITest {
         response.andExpect(status().isNoContent());
 
         verify(deleteVideoUseCase).execute(any());
+    }
+
+    @Test
+    public void givenValidParams_whenCallsListVideos_shouldReturnPagination() throws Exception {
+        //given
+        final var aVideo = new VideoPreview(Fixture.aVideo());
+
+        final var expectedPage = 50;
+        final var expectedPerPage = 50;
+        final var expectedTerms = "Something";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedCastMembers = "cast1";
+        final var expectedGenres = "gen1";
+        final var expectedCategories = "cat1";
+        final var expectedItemsCount = 1;
+        final var expectedTotal = 1;
+
+        final var expectedItems = List.of(VideoListOutput.from(aVideo));
+
+        when(listVideosUseCase.execute(any()))
+                .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
+        //when
+        final var aRequest = get("/videos")
+                .queryParam("page", String.valueOf(expectedPage))
+                .queryParam("perPage", String.valueOf(expectedPerPage))
+                .queryParam("sort", expectedSort)
+                .queryParam("dir", expectedDirection)
+                .queryParam("search", expectedTerms)
+                .queryParam("cast_members_ids", expectedCastMembers)
+                .queryParam("genres_ids", expectedGenres)
+                .queryParam("categories_ids", expectedCategories)
+                .accept(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+        //then
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
+                .andExpect(jsonPath("$.per_page", equalTo(expectedPerPage)))
+                .andExpect(jsonPath("$.total", equalTo(expectedTotal)))
+                .andExpect(jsonPath("$.items", hasSize(expectedItemsCount)))
+                .andExpect(jsonPath("$.items[0].id", equalTo(aVideo.id())))
+                .andExpect(jsonPath("$.items[0].title", equalTo(aVideo.title())))
+                .andExpect(jsonPath("$.items[0].description", equalTo(aVideo.description())))
+                .andExpect(jsonPath("$.items[0].created_at", equalTo(aVideo.createdAt().toString())))
+                .andExpect(jsonPath("$.items[0].updated_at", equalTo(aVideo.updatedAt().toString())));
+
+        final var captor = ArgumentCaptor.forClass(VideoSearchQuery.class);
+
+        verify(listVideosUseCase).execute(captor.capture());
+
+        final var actualQuery = captor.getValue();
+
+        Assertions.assertEquals(expectedPage, actualQuery.page());
+        Assertions.assertEquals(expectedPerPage, actualQuery.perPage());
+        Assertions.assertEquals(expectedDirection, actualQuery.direction());
+        Assertions.assertEquals(expectedSort, actualQuery.sort());
+        Assertions.assertEquals(expectedTerms, actualQuery.terms());
+        Assertions.assertEquals(Set.of(CategoryID.from(expectedCategories)), actualQuery.categories());
+        Assertions.assertEquals(Set.of(GenreID.from(expectedGenres)), actualQuery.genres());
+        Assertions.assertEquals(Set.of(CastMemberID.from(expectedCastMembers)), actualQuery.castMembers());
+    }
+
+    @Test
+    public void givenEmptyParams_whenCallsListVideos_shouldReturnPagination() throws Exception {
+        //given
+        final var aVideo = new VideoPreview(Fixture.aVideo());
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 25;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedItemsCount = 1;
+        final var expectedTotal = 1;
+
+        final var expectedItems = List.of(VideoListOutput.from(aVideo));
+
+        when(listVideosUseCase.execute(any()))
+                .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
+        //when
+        final var aRequest = get("/videos")
+                .accept(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(aRequest);
+        //then
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", equalTo(expectedPage)))
+                .andExpect(jsonPath("$.per_page", equalTo(expectedPerPage)))
+                .andExpect(jsonPath("$.total", equalTo(expectedTotal)))
+                .andExpect(jsonPath("$.items", hasSize(expectedItemsCount)))
+                .andExpect(jsonPath("$.items[0].id", equalTo(aVideo.id())))
+                .andExpect(jsonPath("$.items[0].title", equalTo(aVideo.title())))
+                .andExpect(jsonPath("$.items[0].description", equalTo(aVideo.description())))
+                .andExpect(jsonPath("$.items[0].created_at", equalTo(aVideo.createdAt().toString())))
+                .andExpect(jsonPath("$.items[0].updated_at", equalTo(aVideo.updatedAt().toString())));
+
+        final var captor = ArgumentCaptor.forClass(VideoSearchQuery.class);
+
+        verify(listVideosUseCase).execute(captor.capture());
+
+        final var actualQuery = captor.getValue();
+
+        Assertions.assertEquals(expectedPage, actualQuery.page());
+        Assertions.assertEquals(expectedPerPage, actualQuery.perPage());
+        Assertions.assertEquals(expectedDirection, actualQuery.direction());
+        Assertions.assertEquals(expectedSort, actualQuery.sort());
+        Assertions.assertEquals(expectedTerms, actualQuery.terms());
+        Assertions.assertTrue(actualQuery.categories().isEmpty());
+        Assertions.assertTrue(actualQuery.genres().isEmpty());
+        Assertions.assertTrue(actualQuery.castMembers().isEmpty());
+    }
+
+    @Test
+    public void givenAValidVideoIdAndFileType_whenCallsGetMediaById_shouldReturnContent() throws Exception {
+        //given
+        final var expectedVideo = Fixture.Videos.lordOfTheRings();
+        final var expectedId = expectedVideo.getId();
+
+        final var expectedMediaType = VideoMediaType.VIDEO;
+        final var expectedResource = Fixture.Videos.resource(VideoMediaType.VIDEO);
+
+        final var expectedMedia = new MediaOutput(expectedResource.content(), expectedResource.contentType(), expectedResource.name());
+        when(getMediaUseCase.execute(any())).thenReturn(expectedMedia);
+        //when
+        final var aRequest = get("/videos/{id}/medias/{type}", expectedId.getValue(), expectedMediaType.name());
+
+        final var response = this.mvc.perform(aRequest);
+        //then
+
+        response.andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, expectedMedia.contentType()))
+                .andExpect(header().string(HttpHeaders.CONTENT_LENGTH, String.valueOf(expectedMedia.content().length)))
+                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=%s".formatted(expectedMedia.name())))
+                .andExpect(content().bytes(expectedMedia.content()));
+
     }
 }

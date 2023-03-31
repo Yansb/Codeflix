@@ -2,10 +2,14 @@ package com.yansb.admin.api.infrastructure.configuration.usecases;
 
 import com.yansb.admin.api.application.video.create.CreateVideoUseCase;
 import com.yansb.admin.api.application.video.create.DefaultCreateVideoUseCase;
+import com.yansb.admin.api.application.video.delete.DefaultDeleteVideoUseCase;
+import com.yansb.admin.api.application.video.delete.DeleteVideoUseCase;
 import com.yansb.admin.api.application.video.media.update.DefaultUpdateMediaStatusUseCase;
 import com.yansb.admin.api.application.video.media.update.UpdateMediaStatusUseCase;
 import com.yansb.admin.api.application.video.retrieve.get.DefaultGetVideoByIdUseCase;
 import com.yansb.admin.api.application.video.retrieve.get.GetVideoByIdUseCase;
+import com.yansb.admin.api.application.video.retrieve.list.DefaultListVideosUseCase;
+import com.yansb.admin.api.application.video.retrieve.list.ListVideosUseCase;
 import com.yansb.admin.api.application.video.update.DefaultUpdateVideoUseCase;
 import com.yansb.admin.api.application.video.update.UpdateVideoUseCase;
 import com.yansb.admin.api.domain.castMember.CastMemberGateway;
@@ -64,4 +68,16 @@ public class VideoUseCaseConfig {
     public UpdateVideoUseCase updateVideoUseCase() {
         return new DefaultUpdateVideoUseCase(categoryGateway, genreGateway, castMemberGateway, videoGateway, mediaResourceGateway);
     }
+
+    @Bean
+    public DeleteVideoUseCase deleteVideoUseCase() {
+        return new DefaultDeleteVideoUseCase(videoGateway, mediaResourceGateway);
+    }
+
+    @Bean
+    public ListVideosUseCase listVideosUseCase() {
+        return new DefaultListVideosUseCase(videoGateway);
+    }
+
+
 }

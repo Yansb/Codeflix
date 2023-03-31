@@ -228,9 +228,9 @@ class DefaultVideoGatewayTest {
         Assertions.assertEquals(expectedOpened, persistedVideo.isOpened());
         Assertions.assertEquals(expectedPublished, persistedVideo.isPublished());
         Assertions.assertEquals(expectedRating, persistedVideo.getRating());
-        Assertions.assertNull(persistedVideo.getCategoriesID());
-        Assertions.assertNull(persistedVideo.getGenresID());
-        Assertions.assertNull(persistedVideo.getCastMembersID());
+        Assertions.assertTrue(persistedVideo.getCategoriesID().isEmpty());
+        Assertions.assertTrue(persistedVideo.getGenresID().isEmpty());
+        Assertions.assertTrue(persistedVideo.getCastMembersID().isEmpty());
         Assertions.assertNull(persistedVideo.getVideo());
         Assertions.assertNull(persistedVideo.getTrailer());
         Assertions.assertNull(persistedVideo.getBanner());
@@ -333,9 +333,9 @@ class DefaultVideoGatewayTest {
         Assertions.assertEquals(expectedOpened, persistedVideo.isOpened());
         Assertions.assertEquals(expectedPublished, persistedVideo.isPublished());
         Assertions.assertEquals(expectedRating, persistedVideo.getRating());
-        Assertions.assertNull(persistedVideo.getCategoriesID());
-        Assertions.assertNull(persistedVideo.getGenresID());
-        Assertions.assertNull(persistedVideo.getCastMembersID());
+        Assertions.assertTrue(persistedVideo.getCategoriesID().isEmpty());
+        Assertions.assertTrue(persistedVideo.getGenresID().isEmpty());
+        Assertions.assertTrue(persistedVideo.getCastMembersID().isEmpty());
         Assertions.assertTrue(persistedVideo.getUpdatedAt().isAfter(persistedVideo.getCreatedAt()));
     }
 
