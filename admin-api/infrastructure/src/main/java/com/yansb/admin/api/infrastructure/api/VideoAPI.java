@@ -1,14 +1,14 @@
 package com.yansb.admin.api.infrastructure.api;
 
+import com.yansb.admin.api.infrastructure.video.models.CreateVideoRequest;
+import com.yansb.admin.api.infrastructure.video.models.VideoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
@@ -47,4 +47,27 @@ public interface VideoAPI {
 
 
     );
+
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Create a new video with medias")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Video created"),
+            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred")
+
+    })
+    ResponseEntity<?> createPartial(@RequestBody CreateVideoRequest payload);
+
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get a video by it's identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Video retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Video not found"),
+            @ApiResponse(responseCode = "500", description = "An Internal Server Error occurred")
+
+    })
+    VideoResponse getById(@PathVariable(name = "id") String id);
 }

@@ -4,6 +4,8 @@ import com.yansb.admin.api.application.video.create.CreateVideoUseCase;
 import com.yansb.admin.api.application.video.create.DefaultCreateVideoUseCase;
 import com.yansb.admin.api.application.video.media.update.DefaultUpdateMediaStatusUseCase;
 import com.yansb.admin.api.application.video.media.update.UpdateMediaStatusUseCase;
+import com.yansb.admin.api.application.video.retrieve.get.DefaultGetVideoByIdUseCase;
+import com.yansb.admin.api.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.yansb.admin.api.domain.castMember.CastMemberGateway;
 import com.yansb.admin.api.domain.category.CategoryGateway;
 import com.yansb.admin.api.domain.genre.GenreGateway;
@@ -49,5 +51,10 @@ public class VideoUseCaseConfig {
     @Bean
     public CreateVideoUseCase createVideoUseCase() {
         return new DefaultCreateVideoUseCase(categoryGateway, genreGateway, castMemberGateway, videoGateway, mediaResourceGateway);
+    }
+
+    @Bean
+    public GetVideoByIdUseCase getVideoByIdUseCase() {
+        return new DefaultGetVideoByIdUseCase(videoGateway);
     }
 }
