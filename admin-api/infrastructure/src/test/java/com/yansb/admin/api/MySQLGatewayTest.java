@@ -1,5 +1,6 @@
 package com.yansb.admin.api;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,12 +14,13 @@ import java.lang.annotation.*;
 @Inherited
 @ActiveProfiles("test-integration")
 @ComponentScan(
-    basePackages = "com.yansb.admin.api",
-    includeFilters = {
-        @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")
-    })
+        basePackages = "com.yansb.admin.api",
+        includeFilters = {
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")
+        })
 @DataJpaTest
 @ExtendWith(MySQLCleanUpExtension.class)
+@Tag("integrationTest")
 public @interface MySQLGatewayTest {
 
 }

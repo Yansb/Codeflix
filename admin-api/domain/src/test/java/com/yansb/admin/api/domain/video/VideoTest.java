@@ -1,5 +1,6 @@
 package com.yansb.admin.api.domain.video;
 
+import com.yansb.admin.api.domain.UnitTest;
 import com.yansb.admin.api.domain.castMember.CastMemberID;
 import com.yansb.admin.api.domain.category.CategoryID;
 import com.yansb.admin.api.domain.genre.GenreID;
@@ -12,7 +13,7 @@ import java.time.Year;
 import java.util.List;
 import java.util.Set;
 
-public class VideoTest {
+public class VideoTest extends UnitTest {
     @Test
     public void givenValidParams_whenCallsNewVideo_shouldInstantiate() {
         // given

@@ -1,6 +1,7 @@
 package com.yansb.admin.api;
 
 import com.yansb.admin.api.infrastructure.configuration.ObjectMapperConfig;
+import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -13,7 +14,8 @@ import java.lang.annotation.*;
 @Inherited
 @ActiveProfiles("test-integration")
 @JsonTest(includeFilters = {
-    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ObjectMapperConfig.class)
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ObjectMapperConfig.class)
 })
+@Tag("integrationTest")
 public @interface JacksonTest {
 }
