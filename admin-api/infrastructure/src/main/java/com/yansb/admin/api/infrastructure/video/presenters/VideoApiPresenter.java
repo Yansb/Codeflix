@@ -1,5 +1,6 @@
 package com.yansb.admin.api.infrastructure.video.presenters;
 
+import com.yansb.admin.api.application.video.media.upload.UploadMediaOutput;
 import com.yansb.admin.api.application.video.retrieve.get.VideoOutput;
 import com.yansb.admin.api.application.video.retrieve.list.VideoListOutput;
 import com.yansb.admin.api.application.video.update.UpdateVideoOutput;
@@ -74,5 +75,13 @@ public interface VideoApiPresenter {
 
     static Pagination<VideoListResponse> present(final Pagination<VideoListOutput> page) {
         return page.map(VideoApiPresenter::present);
+    }
+
+    static UploadMediaResponse present(final UploadMediaOutput output) {
+        return new UploadMediaResponse(
+                output.videoId(),
+                output.mediaType()
+        );
+
     }
 }

@@ -4,8 +4,12 @@ import com.yansb.admin.api.application.video.create.CreateVideoUseCase;
 import com.yansb.admin.api.application.video.create.DefaultCreateVideoUseCase;
 import com.yansb.admin.api.application.video.delete.DefaultDeleteVideoUseCase;
 import com.yansb.admin.api.application.video.delete.DeleteVideoUseCase;
+import com.yansb.admin.api.application.video.media.get.DefaultGetMediaUseCase;
+import com.yansb.admin.api.application.video.media.get.GetMediaUseCase;
 import com.yansb.admin.api.application.video.media.update.DefaultUpdateMediaStatusUseCase;
 import com.yansb.admin.api.application.video.media.update.UpdateMediaStatusUseCase;
+import com.yansb.admin.api.application.video.media.upload.DefaultUploadMediaUseCase;
+import com.yansb.admin.api.application.video.media.upload.UploadMediaUseCase;
 import com.yansb.admin.api.application.video.retrieve.get.DefaultGetVideoByIdUseCase;
 import com.yansb.admin.api.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.yansb.admin.api.application.video.retrieve.list.DefaultListVideosUseCase;
@@ -77,6 +81,16 @@ public class VideoUseCaseConfig {
     @Bean
     public ListVideosUseCase listVideosUseCase() {
         return new DefaultListVideosUseCase(videoGateway);
+    }
+
+    @Bean
+    public GetMediaUseCase getMediaUseCase() {
+        return new DefaultGetMediaUseCase(mediaResourceGateway);
+    }
+
+    @Bean
+    public UploadMediaUseCase uploadMediaUseCase() {
+        return new DefaultUploadMediaUseCase(videoGateway, mediaResourceGateway);
     }
 
 
