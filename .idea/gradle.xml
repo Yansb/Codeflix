@@ -4,13 +4,13 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/admin-api" />
         <option name="gradleJvm" value="17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/admin-api" />
             <option value="$PROJECT_DIR$/admin-api/application" />
+            <option value="$PROJECT_DIR$/admin-api/buildSrc" />
             <option value="$PROJECT_DIR$/admin-api/domain" />
             <option value="$PROJECT_DIR$/admin-api/infrastructure" />
           </set>
