@@ -1,4 +1,4 @@
-rootProject.name = 'admin-api'
+rootProject.name = 'Codeflix'
 include 'domain'
 include 'application'
 include 'infrastructure'
