@@ -3,7 +3,7 @@ version: '3.7'
 services:
   app:
     container_name: adm_videos_app
-    build: admin-api
+    image: yansb/codeflix:master-1
     profiles: [ "app" ]
     restart: unless-stopped
     env_file:
@@ -41,5 +41,19 @@ services:
       - 5672:5672
     networks:
       - adm_videos_network
+
+  keycloak:
+    container_name: adm_videos_keycloak
+    image: quay.io/keycloak/keycloak:21.0.2
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - 8443:8080
+    command:
+      - start-dev
+    networks:
+      - adm_videos_network
+
 networks:
   adm_videos_network:
