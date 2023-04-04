@@ -3,6 +3,11 @@ mysql:
   password: 123456
   schema: adm_videos
   url: localhost:${mysql.port}
+
+keycloak:
+  host: http://test:8443
+  realm: test
+
 logging:
   level:
     root: info

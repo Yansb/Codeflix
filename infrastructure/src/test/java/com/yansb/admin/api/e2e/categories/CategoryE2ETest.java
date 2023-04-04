@@ -1,5 +1,6 @@
 package com.yansb.admin.api.e2e.categories;
 
+import com.yansb.admin.api.ApiTest;
 import com.yansb.admin.api.E2ETest;
 import com.yansb.admin.api.e2e.MockDsl;
 import com.yansb.admin.api.infrastructure.category.models.UpdateCategoryRequest;
@@ -176,6 +177,7 @@ public class CategoryE2ETest implements MockDsl {
         Assertions.assertEquals(0, categoryRepository.count());
 
         final var aRequest = get("/categories/123")
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 

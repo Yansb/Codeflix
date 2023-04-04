@@ -1,3 +1,6 @@
+keycloak:
+  host: http://test:8443
+  realm: test
 spring:
   autoconfigure:
     exclude:

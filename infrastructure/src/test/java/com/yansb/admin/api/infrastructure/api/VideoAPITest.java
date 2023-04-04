@@ -1,6 +1,7 @@
 package com.yansb.admin.api.infrastructure.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yansb.admin.api.ApiTest;
 import com.yansb.admin.api.ControllerTest;
 import com.yansb.admin.api.application.video.create.CreateVideoCommand;
 import com.yansb.admin.api.application.video.create.CreateVideoOutput;
@@ -125,6 +126,7 @@ class VideoAPITest {
                 .file(expectedBanner)
                 .file(expectedThumbnail)
                 .file(expectedThumbHalf)
+                .with(ApiTest.VIDEOS_JWT)
                 .param("title", expectedTitle)
                 .param("description", expectedDescription)
                 .param("year_launched", String.valueOf(expectedLaunchYear))
@@ -176,6 +178,7 @@ class VideoAPITest {
                 thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
         //when
         final var aRequest = multipart("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -223,6 +226,7 @@ class VideoAPITest {
         //when
 
         final var aRequest = post("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aCommand));
@@ -267,6 +271,7 @@ class VideoAPITest {
         //when
 
         final var aRequest = post("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -320,6 +325,7 @@ class VideoAPITest {
         //when
 
         final var aRequest = post("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aCommand));
@@ -359,6 +365,7 @@ class VideoAPITest {
     public void givenAnEmptyBody_whenCallsCreatePartial_shouldReturnError() throws Exception {
         //when
         final var aRequest = post("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -416,6 +423,7 @@ class VideoAPITest {
                 .thenReturn(VideoOutput.from(aVideo));
         //when
         final var aRequest = MockMvcRequestBuilders.get("/videos/{id}", expectedId)
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON);
 
         final var response = this.mvc.perform(aRequest);
@@ -473,6 +481,7 @@ class VideoAPITest {
                 .thenThrow(NotFoundException.with(Video.class, expectedId));
         //when
         final var aRequest = MockMvcRequestBuilders.get("/videos/{id}", expectedId)
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON);
 
         final var response = this.mvc.perform(aRequest);
@@ -521,6 +530,7 @@ class VideoAPITest {
         //when
 
         final var aRequest = put("/videos/{id}", expectedId.getValue())
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aCommand));
@@ -596,6 +606,7 @@ class VideoAPITest {
         //when
 
         final var aRequest = put("/videos/{id}", expectedId.getValue())
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aCommand));
@@ -621,7 +632,8 @@ class VideoAPITest {
 
         doNothing().when(deleteVideoUseCase).execute(any());
         //when
-        final var aRequest = delete("/videos/{id}", expectedId.getValue());
+        final var aRequest = delete("/videos/{id}", expectedId.getValue())
+                .with(ApiTest.VIDEOS_JWT);
 
         final var response = this.mvc.perform(aRequest);
         //then
@@ -652,6 +664,7 @@ class VideoAPITest {
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
         //when
         final var aRequest = get("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .queryParam("page", String.valueOf(expectedPage))
                 .queryParam("perPage", String.valueOf(expectedPerPage))
                 .queryParam("sort", expectedSort)
@@ -711,6 +724,7 @@ class VideoAPITest {
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
         //when
         final var aRequest = get("/videos")
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON);
 
         final var response = this.mvc.perform(aRequest);
@@ -755,7 +769,8 @@ class VideoAPITest {
         final var expectedMedia = new MediaOutput(expectedResource.content(), expectedResource.contentType(), expectedResource.name());
         when(getMediaUseCase.execute(any())).thenReturn(expectedMedia);
         //when
-        final var aRequest = get("/videos/{id}/medias/{type}", expectedId.getValue(), expectedMediaType.name());
+        final var aRequest = get("/videos/{id}/medias/{type}", expectedId.getValue(), expectedMediaType.name())
+                .with(ApiTest.VIDEOS_JWT);
 
         final var response = this.mvc.perform(aRequest);
         //then
@@ -797,6 +812,7 @@ class VideoAPITest {
         //when
         final var aRequest = multipart("/videos/{id}/medias/{type}", expectedId.getValue(), expectedType)
                 .file(expectedVideo)
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -839,6 +855,7 @@ class VideoAPITest {
         //when
         final var aRequest = multipart("/videos/{id}/medias/INVALID", expectedId.getValue())
                 .file(expectedVideo)
+                .with(ApiTest.VIDEOS_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
