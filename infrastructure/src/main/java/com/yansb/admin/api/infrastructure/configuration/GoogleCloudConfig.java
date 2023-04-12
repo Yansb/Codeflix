@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 @Configuration
-@Profile({"production", "development"})
+@Profile({"!development & !test-integration & !test-e2e"})
 public class GoogleCloudConfig {
 
     @Bean
